@@ -34,25 +34,24 @@
     },
     {
       "id": 2,
-      "imgurl": "https://iili.io/CCDtDns.jpg",
+      "imgurl": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600",
       "caption": "Sustainable Farming Workshop",
       "date": "March 22, 2026",
       "time": "9:00 AM - 1:00 PM"
     },
-    {
+
+{
       "id": 3,
+      "imgurl": "https://iili.io/CCDtDns.jpg",
+      "caption": "Reading",
+      "date": "March 22, 2026",
+      "time": "9:00 AM - 1:00 PM"
+    },
+    {
+      "id": 4,
       "imgurl": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600",
       "caption": "Web Dev Meetup: Node.js + Express",
       "date": "April 5, 2026",
-      "time": "6:00 PM - 9:00 PM"
-    }
-  ]
-}
-{
-      "id": 4,
-      "imgurl": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600",
-      "caption": "Reading Book",
-      "date": "06/13/26",
       "time": "6:00 PM - 9:00 PM"
     }
   ]
