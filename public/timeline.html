@@ -20,6 +20,15 @@
             position: relative;
         }
 
+        body.dark-mode {
+            background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format') no-repeat center center/cover;
+            background-attachment: fixed;
+        }
+
+        body.dark-mode::before {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
         body::before {
             content: '';
             position: fixed;
@@ -29,6 +38,17 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.3);
             z-index: 0;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         nav {
@@ -102,10 +122,6 @@
             color: white;
             cursor: pointer;
             transition: transform 0.3s;
-        }
-
-        #theme-button:hover {
-            transform: rotate(20deg);
         }
 
         .sidebar {
@@ -209,11 +225,6 @@
             transition: all 0.3s;
         }
 
-        .sidebar-event-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(5px);
-        }
-
         .sidebar-event-img {
             width: 100%;
             height: 100px;
@@ -236,13 +247,6 @@
             align-items: center;
             gap: 5px;
             margin-right: 10px;
-        }
-
-        .loading-events {
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-            padding: 20px;
-            font-size: 0.85rem;
         }
 
         .main-wrapper {
@@ -373,6 +377,19 @@
             font-size: 1.2rem;
         }
 
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-top: 20px;
+        }
+
+        .footer i {
+            color: #4caf50;
+            margin: 0 4px;
+        }
+
         .overlay {
             position: fixed;
             top: 0;
@@ -415,8 +432,8 @@
                 <div></div>
                 <div></div>
             </div>
-            <img src="https://iili.io/CCgmBup.jpg" alt="logo" />
-            <h6>EVSU Burauen Campus</h6>
+            <img src="https://iili.io/CCgmBup.jpg" alt="logo" id="navLogo">
+            <h6 id="navTitle">EVSU Burauen Campus</h6>
         </div>
         <i class="fas fa-moon" id="theme-button"></i>
     </nav>
@@ -426,7 +443,6 @@
             <h2>Menu</h2>
             <div class="subtitle">Student Profile Navigation</div>
         </div>
-        
         <div class="sidebar-menu">
             <a href="/" class="menu-item">
                 <i class="fas fa-home"></i>
@@ -437,9 +453,7 @@
                 <span class="menu-text">TIMELINE</span>
             </a>
         </div>
-        
         <div class="menu-divider"></div>
-        
         <div class="events-title">
             <i class="fas fa-calendar-week"></i>
             <span>Upcoming Events</span>
@@ -455,7 +469,7 @@
 
     <div class="main-wrapper" id="mainWrapper">
         <div class="container">
-            <div class="glass-card">
+            <div class="glass-card fade-in" id="timelineCard">
                 <div class="section-title">
                     <i class="fas fa-calendar-alt"></i>
                     <h2>Events Timeline</h2>
@@ -464,6 +478,11 @@
                     <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading events...</div>
                 </div>
             </div>
+        </div>
+        
+        <div class="footer">
+            <i class="fas fa-copyright"></i> 2026 All Rights Reserved. 
+            <i class="fas fa-user-shield"></i> This page is managed by Web Admin
         </div>
     </div>
 
@@ -493,6 +512,16 @@
             overlay.classList.remove('active');
             hamburger.classList.remove('active');
             mainWrapper.classList.remove('shifted');
+        }
+
+        function handleScrollAnimation() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    el.classList.add('visible');
+                }
+            });
         }
 
         async function loadEvents() {
@@ -533,6 +562,8 @@
                         </div>
                     `).join('');
                 }
+                
+                handleScrollAnimation();
             } catch (error) {
                 document.getElementById('timelineContainer').innerHTML = '<div class="loading">Error loading events.</div>';
                 console.error(error);
@@ -550,19 +581,18 @@
         }
 
         const themeButton = document.getElementById('theme-button');
-        let isDark = true;
+        const savedTheme = localStorage.getItem('theme');
+        
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeButton.className = 'fas fa-sun';
+        }
         
         themeButton.addEventListener('click', () => {
-            if (isDark) {
-                document.body.style.background = "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format') no-repeat center center/cover";
-                document.body.style.backgroundAttachment = "fixed";
-                themeButton.className = "fas fa-sun";
-            } else {
-                document.body.style.background = "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2073&auto=format') no-repeat center center/cover";
-                document.body.style.backgroundAttachment = "fixed";
-                themeButton.className = "fas fa-moon";
-            }
-            isDark = !isDark;
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            themeButton.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
 
         document.addEventListener('click', function(event) {
@@ -576,7 +606,11 @@
             }
         });
 
-        loadEvents();
+        window.addEventListener('scroll', handleScrollAnimation);
+        window.addEventListener('load', () => {
+            loadEvents();
+            handleScrollAnimation();
+        });
     </script>
 </body>
 </html>
