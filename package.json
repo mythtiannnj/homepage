@@ -1,0 +1,25 @@
+{
+  "name": "student-profile",
+  "version": "1.0.0",
+  "description": "Student profile website with glassmorphism design, system dashboard, and events timeline",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": [
+    "student-profile",
+    "agriculture-student",
+    "glassmorphism",
+    "express",
+    "portfolio"
+  ],
+  "author": "Mythiann N. Jay",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
