@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>NewsFeed</title>
+    <link rel="icon" href="https://iili.io/CC6nKHQ.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2073&auto=format') no-repeat center center/cover;
+            background-attachment: fixed;
+            background-size: cover;
+            position: relative;
+        }
+
+        body.dark-mode {
+            background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format') no-repeat center center/cover;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+        }
+
+        body.dark-mode::before {
+            background: rgba(0, 0, 0, 0.65);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        nav img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        nav h6 {
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        #theme-button {
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease;
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-header h2 {
+            color: #4caf50;
+            font-size: 1.5rem;
+        }
+
+        .sidebar-menu {
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: rgba(76, 175, 80, 0.3);
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            width: 24px;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            padding: 100px 20px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i {
+            color: #4caf50;
+        }
+
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #4caf50;
+            border-color: #4caf50;
+        }
+
+        .region-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+        }
+
+        .region-header i {
+            font-size: 2rem;
+            color: #4caf50;
+        }
+
+        .region-header h3 {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .news-card {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            background: rgba(0, 0, 0, 0.65);
+            border-color: #4caf50;
+        }
+
+        .news-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+
+        .news-content {
+            padding: 18px;
+        }
+
+        .news-source {
+            display: inline-block;
+            background: rgba(76, 175, 80, 0.7);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .news-title {
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-date {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .news-summary {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: white;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 40px;
+            color: #ff6b6b;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-title {
+                font-size: 1.3rem;
+            }
+            .category-btn {
+                padding: 5px 12px;
+                font-size: 0.8rem;
+            }
+            nav h6 {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="navbar-left">
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <div></div><div></div><div></div>
+            </div>
+            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo">
+            <h6>NewsFeed PH & Global</h6>
+        </div>
+        <i class="fas fa-moon" id="theme-button"></i>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <div class="subtitle" style="color:rgba(255,255,255,0.7); font-size:0.75rem;">Navigation</div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="/" class="menu-item"><i class="fas fa-home"></i> HOME</a>
+            <a href="/timeline" class="menu-item"><i class="fas fa-calendar-alt"></i> TIMELINE</a>
+            <a href="/newsfeed" class="menu-item active"><i class="fas fa-newspaper"></i> NEWSFEED</a>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+    <div class="main-wrapper" id="mainWrapper">
+        <div class="container">
+            <!-- Region Selection Tabs -->
+            <div class="glass-card">
+                <div class="category-tabs" id="regionTabs">
+                    <button class="category-btn active" data-region="philippines">🇵🇭 Philippines</button>
+                    <button class="category-btn" data-region="global">🌍 Global</button>
+                    <button class="category-btn" data-region="combined">🔄 Combined</button>
+                </div>
+
+                <!-- Category Filter (for Philippines) -->
+                <div class="category-tabs" id="phCategoryTabs">
+                    <button class="category-btn active" data-ph-cat="general">📰 General</button>
+                    <button class="category-btn" data-ph-cat="agriculture">🌾 Agriculture</button>
+                    <button class="category-btn" data-ph-cat="technology">💻 Technology</button>
+                    <button class="category-btn" data-ph-cat="climate">🌡️ Climate</button>
+                    <button class="category-btn" data-ph-cat="farming">🚜 Farming</button>
+                </div>
+
+                <!-- Category Filter (for Global) -->
+                <div class="category-tabs" id="globalCategoryTabs" style="display: none;">
+                    <button class="category-btn active" data-global-cat="general">🌐 General</button>
+                    <button class="category-btn" data-global-cat="agriculture">🌽 Agriculture</button>
+                    <button class="category-btn" data-global-cat="technology">⚡ Technology</button>
+                </div>
+
+                <!-- Search Bar -->
+                <div style="margin-top: 15px;">
+                    <input type="text" id="searchInput" placeholder="🔍 Search Philippines news..." style="width: 100%; padding: 12px 20px; border-radius: 30px; border: none; background: rgba(0,0,0,0.5); color: white; font-size: 0.9rem;">
+                </div>
+            </div>
+
+            <!-- News Content -->
+            <div id="newsContent">
+                <div class="loading"><i class="fas fa-spinner fa-pulse"></i><br>Loading news...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRegion = 'philippines';
+        let currentPHCategory = 'general';
+        let currentGlobalCategory = 'general';
+        let searchQuery = '';
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+            document.getElementById('hamburger').classList.toggle('active');
+        }
+
+        function closeMenu() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('hamburger').classList.remove('active');
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            try {
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            } catch {
+                return dateStr || 'Recent';
+            }
+        }
+
+        // Extract text from HTML (for summary)
+        function extractText(html) {
+            if (!html) return '';
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            return temp.textContent || temp.innerText || '';
+        }
+
+        // Fetch news based on current region and category
+        async function fetchNews() {
+            const contentDiv = document.getElementById('newsContent');
+            contentDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-pulse"></i><br>Loading news...</div>';
+
+            try {
+                let url = '';
+                if (searchQuery) {
+                    url = `/api/news/search/${encodeURIComponent(searchQuery)}`;
+                } else if (currentRegion === 'philippines') {
+                    url = `/api/news/philippines/${currentPHCategory}`;
+                } else if (currentRegion === 'global') {
+                    url = `/api/news/global/${currentGlobalCategory}`;
+                } else if (currentRegion === 'combined') {
+                    url = `/api/news/combined`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!data.success && currentRegion !== 'combined') {
+                    throw new Error('Failed to fetch news');
+                }
+
+                let articles = [];
+                let phArticles = [];
+                let globalArticles = [];
+
+                if (currentRegion === 'combined') {
+                    phArticles = data.philippines || [];
+                    globalArticles = data.global || [];
+                    articles = [...phArticles, ...globalArticles];
+                    articles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+                } else {
+                    articles = data.articles || [];
+                }
+
+                if (articles.length === 0 && phArticles.length === 0 && globalArticles.length === 0) {
+                    contentDiv.innerHTML = '<div class="glass-card"><div class="error-message"><i class="fas fa-newspaper"></i><br>No news found. Try a different category or search term.</div></div>';
+                    return;
+                }
+
+                let html = '';
+
+                if (currentRegion === 'combined') {
+                    html += `
+                        <div class="region-header">
+                            <i class="fas fa-globe-asia"></i>
+                            <h3>🇵🇭 Philippines News (${phArticles.length})</h3>
+                        </div>
+                        <div class="news-grid">
+                            ${phArticles.map(article => renderNewsCard(article, 'Philippines')).join('')}
+                        </div>
+                        ${globalArticles.length > 0 ? `
+                            <div class="region-header" style="margin-top: 30px;">
+                                <i class="fas fa-globe"></i>
+                                <h3>🌍 Global News (${globalArticles.length})</h3>
+                            </div>
+                            <div class="news-grid">
+                                ${globalArticles.map(article => renderNewsCard(article, 'Global')).join('')}
+                            </div>
+                        ` : ''}
+                    `;
+                } else {
+                    html = `<div class="news-grid">${articles.map(article => renderNewsCard(article, currentRegion === 'philippines' ? '🇵🇭 PH' : '🌍 Global')).join('')}</div>`;
+                }
+
+                contentDiv.innerHTML = html;
+
+            } catch (error) {
+                console.error('Error:', error);
+                contentDiv.innerHTML = '<div class="glass-card"><div class="error-message"><i class="fas fa-exclamation-triangle"></i><br>Error loading news. Please try again later.</div></div>';
+            }
+        }
+
+        function renderNewsCard(article, region) {
+            const title = article.title || 'No title';
+            const summary = extractText(article.description || article.content || 'Click to read more...');
+            const pubDate = formatDate(article.pubDate);
+            const link = article.link || '#';
+            const thumbnail = article.thumbnail || article.enclosure?.link || 'https://placehold.co/400x200/1a472a/white?text=News+Image';
+            
+            return `
+                <div class="news-card" onclick="window.open('${link}', '_blank')">
+                    <img src="${thumbnail}" class="news-img" alt="${escapeHtml(title)}" onerror="this.src='https://placehold.co/400x200/1a472a/white?text=News+Image'">
+                    <div class="news-content">
+                        <span class="news-source"><i class="fas ${region === '🇵🇭 PH' ? 'fa-map-marker-alt' : 'fa-globe'}"></i> ${region}</span>
+                        <div class="news-title">${escapeHtml(title)}</div>
+                        <div class="news-summary">${escapeHtml(summary.substring(0, 120))}...</div>
+                        <div class="news-date"><i class="far fa-clock"></i> ${pubDate}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('regionTabs').addEventListener('click', (e) => {
+            const btn = e.target.closest('.category-btn');
+            if (!btn) return;
+            const region = btn.dataset.region;
+            if (!region) return;
+            
+            currentRegion = region;
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            
+            // Update active state
+            document.querySelectorAll('#regionTabs .category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Show/hide category tabs
+            document.getElementById('phCategoryTabs').style.display = region === 'philippines' ? 'flex' : 'none';
+            document.getElementById('globalCategoryTabs').style.display = region === 'global' ? 'flex' : 'none';
+            
+            fetchNews();
+        });
+
+        document.getElementById('phCategoryTabs').addEventListener('click', (e) => {
+            const btn = e.target.closest('.category-btn');
+            if (!btn) return;
+            const category = btn.dataset.phCat;
+            if (!category) return;
+            
+            currentPHCategory = category;
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            
+            document.querySelectorAll('#phCategoryTabs .category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            fetchNews();
+        });
+
+        document.getElementById('globalCategoryTabs').addEventListener('click', (e) => {
+            const btn = e.target.closest('.category-btn');
+            if (!btn) return;
+            const category = btn.dataset.globalCat;
+            if (!category) return;
+            
+            currentGlobalCategory = category;
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            
+            document.querySelectorAll('#globalCategoryTabs .category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            fetchNews();
+        });
+
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchQuery = e.target.value.trim();
+                if (searchQuery) {
+                    currentRegion = 'philippines';
+                    document.querySelectorAll('#regionTabs .category-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelector('#regionTabs .category-btn[data-region="philippines"]').classList.add('active');
+                    document.getElementById('phCategoryTabs').style.display = 'flex';
+                    document.getElementById('globalCategoryTabs').style.display = 'none';
+                    fetchNews();
+                } else if (searchQuery === '') {
+                    fetchNews();
+                }
+            }, 500);
+        });
+
+        // Theme toggle
+        const themeButton = document.getElementById('theme-button');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeButton.className = 'fas fa-sun';
+        }
+        themeButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            themeButton.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Load initial news
+        fetchNews();
+    </script>
+</body>
+</html>
