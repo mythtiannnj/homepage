@@ -309,10 +309,11 @@
             margin-top: 10px;
         }
 
-        .news-summary {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.8rem;
+        .news-description {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.85rem;
             line-height: 1.5;
+            margin-top: 8px;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
@@ -404,19 +405,17 @@
                     <button class="category-btn" data-region="combined">🔄 Combined</button>
                 </div>
 
-                <!-- Category Filter (for Philippines) -->
+                <!-- Category Filter (for Philippines) - Removed "General" -->
                 <div class="category-tabs" id="phCategoryTabs">
-                    <button class="category-btn active" data-ph-cat="general">📰 General</button>
-                    <button class="category-btn" data-ph-cat="agriculture">🌾 Agriculture</button>
+                    <button class="category-btn active" data-ph-cat="agriculture">🌾 Agriculture</button>
                     <button class="category-btn" data-ph-cat="technology">💻 Technology</button>
                     <button class="category-btn" data-ph-cat="climate">🌡️ Climate</button>
                     <button class="category-btn" data-ph-cat="farming">🚜 Farming</button>
                 </div>
 
-                <!-- Category Filter (for Global) -->
+                <!-- Category Filter (for Global) - Removed "General" -->
                 <div class="category-tabs" id="globalCategoryTabs" style="display: none;">
-                    <button class="category-btn active" data-global-cat="general">🌐 General</button>
-                    <button class="category-btn" data-global-cat="agriculture">🌽 Agriculture</button>
+                    <button class="category-btn active" data-global-cat="agriculture">🌽 Agriculture</button>
                     <button class="category-btn" data-global-cat="technology">⚡ Technology</button>
                 </div>
 
@@ -435,8 +434,8 @@
 
     <script>
         let currentRegion = 'philippines';
-        let currentPHCategory = 'general';
-        let currentGlobalCategory = 'general';
+        let currentPHCategory = 'agriculture';
+        let currentGlobalCategory = 'agriculture';
         let searchQuery = '';
 
         function toggleMenu() {
@@ -461,18 +460,45 @@
             }
         }
 
-        // Extract text from HTML (for summary)
-        function extractText(html) {
-            if (!html) return '';
+        // Extract clean description from HTML content
+        function extractDescription(html) {
+            if (!html) return 'Click to read more about this news article...';
             const temp = document.createElement('div');
             temp.innerHTML = html;
-            return temp.textContent || temp.innerText || '';
+            let text = temp.textContent || temp.innerText || '';
+            // Remove "Read more" and similar phrases
+            text = text.replace(/Read more$|Read more\.\.\.$|…$/, '').trim();
+            if (text.length === 0) return 'Click to read more about this news article...';
+            return text.length > 150 ? text.substring(0, 150) + '...' : text;
+        }
+
+        // Extract image URL from article (multiple fallbacks)
+        function extractImageUrl(article) {
+            // Try multiple possible image fields
+            if (article.thumbnail) return article.thumbnail;
+            if (article.enclosure && article.enclosure.link) return article.enclosure.link;
+            if (article.image) return article.image;
+            
+            // Try to extract from description HTML
+            if (article.description) {
+                const imgMatch = article.description.match(/<img[^>]+src=["']([^"']+)["']/i);
+                if (imgMatch && imgMatch[1]) return imgMatch[1];
+            }
+            
+            // Try from content
+            if (article.content) {
+                const imgMatch = article.content.match(/<img[^>]+src=["']([^"']+)["']/i);
+                if (imgMatch && imgMatch[1]) return imgMatch[1];
+            }
+            
+            // Return placeholder with category-specific color
+            return null;
         }
 
         // Fetch news based on current region and category
         async function fetchNews() {
             const contentDiv = document.getElementById('newsContent');
-            contentDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-pulse"></i><br>Loading news...</div>';
+            contentDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-pulse"></i><br>Loading latest news...</div>';
 
             try {
                 let url = '';
@@ -514,26 +540,43 @@
                 let html = '';
 
                 if (currentRegion === 'combined') {
-                    html += `
-                        <div class="region-header">
-                            <i class="fas fa-globe-asia"></i>
-                            <h3>🇵🇭 Philippines News (${phArticles.length})</h3>
-                        </div>
-                        <div class="news-grid">
-                            ${phArticles.map(article => renderNewsCard(article, 'Philippines')).join('')}
-                        </div>
-                        ${globalArticles.length > 0 ? `
+                    if (phArticles.length > 0) {
+                        html += `
+                            <div class="region-header">
+                                <i class="fas fa-globe-asia"></i>
+                                <h3>🇵🇭 Philippines News (${phArticles.length})</h3>
+                            </div>
+                            <div class="news-grid">
+                                ${phArticles.map(article => renderNewsCard(article, '🇵🇭 Philippines')).join('')}
+                            </div>
+                        `;
+                    }
+                    if (globalArticles.length > 0) {
+                        html += `
                             <div class="region-header" style="margin-top: 30px;">
                                 <i class="fas fa-globe"></i>
                                 <h3>🌍 Global News (${globalArticles.length})</h3>
                             </div>
                             <div class="news-grid">
-                                ${globalArticles.map(article => renderNewsCard(article, 'Global')).join('')}
+                                ${globalArticles.map(article => renderNewsCard(article, '🌍 Global')).join('')}
                             </div>
-                        ` : ''}
-                    `;
+                        `;
+                    }
                 } else {
-                    html = `<div class="news-grid">${articles.map(article => renderNewsCard(article, currentRegion === 'philippines' ? '🇵🇭 PH' : '🌍 Global')).join('')}</div>`;
+                    const regionLabel = currentRegion === 'philippines' ? '🇵🇭 Philippines' : '🌍 Global';
+                    const categoryLabel = currentRegion === 'philippines' 
+                        ? currentPHCategory.charAt(0).toUpperCase() + currentPHCategory.slice(1)
+                        : currentGlobalCategory.charAt(0).toUpperCase() + currentGlobalCategory.slice(1);
+                    
+                    html = `
+                        <div class="region-header">
+                            <i class="fas ${currentRegion === 'philippines' ? 'fa-globe-asia' : 'fa-globe'}"></i>
+                            <h3>${regionLabel} - ${categoryLabel} News (${articles.length})</h3>
+                        </div>
+                        <div class="news-grid">
+                            ${articles.map(article => renderNewsCard(article, regionLabel)).join('')}
+                        </div>
+                    `;
                 }
 
                 contentDiv.innerHTML = html;
@@ -545,19 +588,39 @@
         }
 
         function renderNewsCard(article, region) {
-            const title = article.title || 'No title';
-            const summary = extractText(article.description || article.content || 'Click to read more...');
+            const title = article.title || 'No title available';
+            const description = extractDescription(article.description || article.content || '');
             const pubDate = formatDate(article.pubDate);
             const link = article.link || '#';
-            const thumbnail = article.thumbnail || article.enclosure?.link || 'https://placehold.co/400x200/1a472a/white?text=News+Image';
+            let thumbnail = extractImageUrl(article);
+            
+            // Fallback images based on category if no image found
+            if (!thumbnail) {
+                const categoryImages = {
+                    agriculture: 'https://placehold.co/400x200/2e7d32/white?text=🌾+Agriculture+News',
+                    technology: 'https://placehold.co/400x200/1565c0/white?text=💻+Tech+News',
+                    climate: 'https://placehold.co/400x200/ef6c00/white?text=🌡️+Climate+News',
+                    farming: 'https://placehold.co/400x200/388e3c/white?text=🚜+Farming+News',
+                    default: 'https://placehold.co/400x200/1a472a/white?text=📰+News+Article'
+                };
+                thumbnail = categoryImages[currentPHCategory] || categoryImages[currentGlobalCategory] || categoryImages.default;
+            }
+            
+            // Get source name from link
+            let sourceName = 'News Source';
+            try {
+                const urlObj = new URL(link);
+                sourceName = urlObj.hostname.replace('www.', '').split('.')[0];
+                sourceName = sourceName.charAt(0).toUpperCase() + sourceName.slice(1);
+            } catch(e) { sourceName = 'News Article'; }
             
             return `
                 <div class="news-card" onclick="window.open('${link}', '_blank')">
-                    <img src="${thumbnail}" class="news-img" alt="${escapeHtml(title)}" onerror="this.src='https://placehold.co/400x200/1a472a/white?text=News+Image'">
+                    <img src="${thumbnail}" class="news-img" alt="${escapeHtml(title)}" onerror="this.src='https://placehold.co/400x200/1a472a/white?text=📰+News+Article'">
                     <div class="news-content">
-                        <span class="news-source"><i class="fas ${region === '🇵🇭 PH' ? 'fa-map-marker-alt' : 'fa-globe'}"></i> ${region}</span>
+                        <span class="news-source"><i class="fas ${region.includes('Philippines') ? 'fa-map-marker-alt' : 'fa-globe'}"></i> ${region} • ${escapeHtml(sourceName)}</span>
                         <div class="news-title">${escapeHtml(title)}</div>
-                        <div class="news-summary">${escapeHtml(summary.substring(0, 120))}...</div>
+                        <div class="news-description">${escapeHtml(description)}</div>
                         <div class="news-date"><i class="far fa-clock"></i> ${pubDate}</div>
                     </div>
                 </div>
@@ -571,6 +634,8 @@
                 if (m === '<') return '&lt;';
                 if (m === '>') return '&gt;';
                 return m;
+            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+                return c;
             });
         }
 
