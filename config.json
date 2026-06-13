@@ -1,0 +1,44 @@
+{
+  "profile": {
+    "name": "Mythiann N. Jay",
+    "year": "1st Year",
+    "course": "BS Agriculture",
+    "bio": "Passionate 1st year agriculture student with focus on sustainable farming and modern agricultural technologies. Combining traditional agricultural knowledge with cutting-edge web development skills to bridge the gap between farming and technology. Aspiring to build digital solutions for the agricultural sector.",
+    "profileImg": "https://iili.io/CCgYLCB.png",
+    "schoolLogo": "https://iili.io/CCgmBup.jpg",
+    "schoolName": "Eastern Visayas State University - Burauen Campus",
+    "schoolAddress": "Burauen, Leyte, Philippines",
+    "email": "mythiannnj@gmail.com"
+  },
+  "systemInfo": {
+    "ipAddress": "180.190.52.35",
+    "systemTime": "15:16:27",
+    "devicePower": "12%",
+    "powerStatus": "Discharging",
+    "engineStructure": "15 Active Maps",
+    "userAgent": "Mozilla/5.0 (Linux; Android 15; Z2461 Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/149.0.7827.91 Mobile Safari/537.36"
+  },
+  "events": [
+    {
+      "id": 1,
+      "imgurl": "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=600",
+      "caption": "AgriTech Summit 2026",
+      "date": "March 15, 2026",
+      "time": "10:00 AM - 4:00 PM"
+    },
+    {
+      "id": 2,
+      "imgurl": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600",
+      "caption": "Sustainable Farming Workshop",
+      "date": "March 22, 2026",
+      "time": "9:00 AM - 1:00 PM"
+    },
+    {
+      "id": 3,
+      "imgurl": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600",
+      "caption": "Web Dev Meetup: Node.js + Express",
+      "date": "April 5, 2026",
+      "time": "6:00 PM - 9:00 PM"
+    }
+  ]
+}
