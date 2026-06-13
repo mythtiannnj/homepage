@@ -567,6 +567,10 @@
                 <i class="fas fa-calendar-alt"></i>
                 <span class="menu-text">TIMELINE</span>
             </a>
+            <a href="/newsfeed" class="menu-item">
+                <i class="fas fa-newspaper"></i>
+                <span class="menu-text">NEWSFEED</span>
+            </a>
         </div>
         <div class="menu-divider"></div>
         <div class="events-title">
@@ -662,7 +666,7 @@
                 const response = await fetch(imageUrl);
                 const blob = await response.blob();
                 const blobUrl = URL.createObjectURL(blob);
-                
+
                 const link = document.createElement('a');
                 link.href = blobUrl;
                 const safeName = eventName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
@@ -671,7 +675,7 @@
                 link.click();
                 document.body.removeChild(link);
                 URL.revokeObjectURL(blobUrl);
-                
+
                 showToast(`Image saved: ${eventName}`, false);
             } catch (error) {
                 console.error('Save failed:', error);
