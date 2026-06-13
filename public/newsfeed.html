@@ -320,6 +320,17 @@
             overflow: hidden;
         }
 
+        .visit-web-badge {
+            display: inline-block;
+            background: rgba(33, 150, 243, 0.8);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: white;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
         .loading {
             text-align: center;
             padding: 50px;
@@ -405,18 +416,18 @@
                     <button class="category-btn" data-region="combined">🔄 Combined</button>
                 </div>
 
-                <!-- Category Filter (for Philippines) - Removed "General" -->
+                <!-- Category Filter (for Philippines) -->
                 <div class="category-tabs" id="phCategoryTabs">
-                    <button class="category-btn active" data-ph-cat="agriculture">🌾 Agriculture</button>
-                    <button class="category-btn" data-ph-cat="technology">💻 Technology</button>
-                    <button class="category-btn" data-ph-cat="climate">🌡️ Climate</button>
-                    <button class="category-btn" data-ph-cat="farming">🚜 Farming</button>
+                    <button class="category-btn active" data-ph-cat="agriculture">🌾 Visit Web News</button>
+                    <button class="category-btn" data-ph-cat="technology">💻 Visit Web News</button>
+                    <button class="category-btn" data-ph-cat="climate">🌡️ Visit Web News</button>
+                    <button class="category-btn" data-ph-cat="farming">🚜 Visit Web News</button>
                 </div>
 
-                <!-- Category Filter (for Global) - Removed "General" -->
+                <!-- Category Filter (for Global) -->
                 <div class="category-tabs" id="globalCategoryTabs" style="display: none;">
-                    <button class="category-btn active" data-global-cat="agriculture">🌽 Agriculture</button>
-                    <button class="category-btn" data-global-cat="technology">⚡ Technology</button>
+                    <button class="category-btn active" data-global-cat="agriculture">🌽 Visit Web News</button>
+                    <button class="category-btn" data-global-cat="technology">⚡ Visit Web News</button>
                 </div>
 
                 <!-- Search Bar -->
@@ -474,24 +485,20 @@
 
         // Extract image URL from article (multiple fallbacks)
         function extractImageUrl(article) {
-            // Try multiple possible image fields
             if (article.thumbnail) return article.thumbnail;
             if (article.enclosure && article.enclosure.link) return article.enclosure.link;
             if (article.image) return article.image;
             
-            // Try to extract from description HTML
             if (article.description) {
                 const imgMatch = article.description.match(/<img[^>]+src=["']([^"']+)["']/i);
                 if (imgMatch && imgMatch[1]) return imgMatch[1];
             }
             
-            // Try from content
             if (article.content) {
                 const imgMatch = article.content.match(/<img[^>]+src=["']([^"']+)["']/i);
                 if (imgMatch && imgMatch[1]) return imgMatch[1];
             }
             
-            // Return placeholder with category-specific color
             return null;
         }
 
@@ -564,14 +571,11 @@
                     }
                 } else {
                     const regionLabel = currentRegion === 'philippines' ? '🇵🇭 Philippines' : '🌍 Global';
-                    const categoryLabel = currentRegion === 'philippines' 
-                        ? currentPHCategory.charAt(0).toUpperCase() + currentPHCategory.slice(1)
-                        : currentGlobalCategory.charAt(0).toUpperCase() + currentGlobalCategory.slice(1);
                     
                     html = `
                         <div class="region-header">
                             <i class="fas ${currentRegion === 'philippines' ? 'fa-globe-asia' : 'fa-globe'}"></i>
-                            <h3>${regionLabel} - ${categoryLabel} News (${articles.length})</h3>
+                            <h3>${regionLabel} - Visit Web News (${articles.length})</h3>
                         </div>
                         <div class="news-grid">
                             ${articles.map(article => renderNewsCard(article, regionLabel)).join('')}
@@ -594,34 +598,33 @@
             const link = article.link || '#';
             let thumbnail = extractImageUrl(article);
             
-            // Fallback images based on category if no image found
             if (!thumbnail) {
                 const categoryImages = {
-                    agriculture: 'https://placehold.co/400x200/2e7d32/white?text=🌾+Agriculture+News',
-                    technology: 'https://placehold.co/400x200/1565c0/white?text=💻+Tech+News',
-                    climate: 'https://placehold.co/400x200/ef6c00/white?text=🌡️+Climate+News',
-                    farming: 'https://placehold.co/400x200/388e3c/white?text=🚜+Farming+News',
-                    default: 'https://placehold.co/400x200/1a472a/white?text=📰+News+Article'
+                    agriculture: 'https://placehold.co/400x200/2e7d32/white?text=Visit+Web+News',
+                    technology: 'https://placehold.co/400x200/1565c0/white?text=Visit+Web+News',
+                    climate: 'https://placehold.co/400x200/ef6c00/white?text=Visit+Web+News',
+                    farming: 'https://placehold.co/400x200/388e3c/white?text=Visit+Web+News',
+                    default: 'https://placehold.co/400x200/1a472a/white?text=Visit+Web+News'
                 };
                 thumbnail = categoryImages[currentPHCategory] || categoryImages[currentGlobalCategory] || categoryImages.default;
             }
             
-            // Get source name from link
-            let sourceName = 'News Source';
+            let sourceName = 'Web News';
             try {
                 const urlObj = new URL(link);
                 sourceName = urlObj.hostname.replace('www.', '').split('.')[0];
                 sourceName = sourceName.charAt(0).toUpperCase() + sourceName.slice(1);
-            } catch(e) { sourceName = 'News Article'; }
+            } catch(e) { sourceName = 'Web News'; }
             
             return `
                 <div class="news-card" onclick="window.open('${link}', '_blank')">
-                    <img src="${thumbnail}" class="news-img" alt="${escapeHtml(title)}" onerror="this.src='https://placehold.co/400x200/1a472a/white?text=📰+News+Article'">
+                    <img src="${thumbnail}" class="news-img" alt="${escapeHtml(title)}" onerror="this.src='https://placehold.co/400x200/1a472a/white?text=📰+Visit+Web+News'">
                     <div class="news-content">
                         <span class="news-source"><i class="fas ${region.includes('Philippines') ? 'fa-map-marker-alt' : 'fa-globe'}"></i> ${region} • ${escapeHtml(sourceName)}</span>
                         <div class="news-title">${escapeHtml(title)}</div>
                         <div class="news-description">${escapeHtml(description)}</div>
                         <div class="news-date"><i class="far fa-clock"></i> ${pubDate}</div>
+                        <div class="visit-web-badge"><i class="fas fa-external-link-alt"></i> Visit Web News</div>
                     </div>
                 </div>
             `;
@@ -650,11 +653,9 @@
             searchQuery = '';
             document.getElementById('searchInput').value = '';
             
-            // Update active state
             document.querySelectorAll('#regionTabs .category-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
-            // Show/hide category tabs
             document.getElementById('phCategoryTabs').style.display = region === 'philippines' ? 'flex' : 'none';
             document.getElementById('globalCategoryTabs').style.display = region === 'global' ? 'flex' : 'none';
             
