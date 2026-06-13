@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Timeline | Events</title>
     <link rel="icon" href="https://iili.io/CC6nKHQ.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,12 +18,17 @@
             min-height: 100vh;
             background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2073&auto=format') no-repeat center center/cover;
             background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
             position: relative;
+            transition: background 0.5s ease;
         }
 
         body.dark-mode {
             background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format') no-repeat center center/cover;
             background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
         }
 
         body.dark-mode::before {
@@ -39,6 +44,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.3);
             z-index: 0;
+            transition: background 0.3s ease;
         }
 
         .fade-in {
@@ -123,6 +129,10 @@
             color: white;
             cursor: pointer;
             transition: transform 0.3s;
+        }
+
+        #theme-button:hover {
+            transform: rotate(20deg);
         }
 
         .sidebar {
@@ -226,6 +236,11 @@
             transition: all 0.3s;
         }
 
+        .sidebar-event-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
         .sidebar-event-img {
             width: 100%;
             height: 100px;
@@ -250,12 +265,20 @@
             margin-right: 10px;
         }
 
+        .loading-events {
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+        }
+
         .main-wrapper {
             position: relative;
             z-index: 1;
             margin-left: 0;
             transition: margin-left 0.3s ease;
             padding: 100px 20px 20px;
+            min-height: 100vh;
         }
 
         .main-wrapper.shifted {
@@ -275,6 +298,11 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
         }
 
         .section-title {
@@ -406,6 +434,29 @@
             display: block;
         }
 
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .container {
+                max-width: 960px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper.shifted {
+                margin-left: 0;
+            }
+            .section-title {
+                font-size: 1.5rem;
+                justify-content: center;
+            }
+            nav h6 {
+                display: none;
+            }
+            .sidebar {
+                width: 280px;
+                left: -280px;
+            }
+        }
+
         @media (max-width: 600px) {
             .event-item {
                 flex-direction: column;
@@ -416,11 +467,11 @@
             .timeline {
                 padding-left: 20px;
             }
-            .main-wrapper.shifted {
-                margin-left: 0;
+            .section-title {
+                font-size: 1.3rem;
             }
-            nav h6 {
-                display: none;
+            .glass-card {
+                padding: 20px;
             }
         }
     </style>
@@ -433,8 +484,8 @@
                 <div></div>
                 <div></div>
             </div>
-            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo" id="navLogo">
-            <h6 id="navTitle">EVSUnista student</h6>
+            <img src="https://iili.io/CC6nKHQ.png" alt="logo" id="navLogo">
+            <h6 id="navTitle">EVSUista student</h6>
         </div>
         <i class="fas fa-moon" id="theme-button"></i>
     </nav>
@@ -480,7 +531,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer">
             <i class="fas fa-copyright"></i> 2026 All Rights Reserved. 
             <i class="fas fa-user-shield"></i> This page is managed by Web Admin
@@ -493,11 +544,11 @@
             const overlay = document.getElementById('overlay');
             const hamburger = document.getElementById('hamburger');
             const mainWrapper = document.getElementById('mainWrapper');
-            
+
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
             hamburger.classList.toggle('active');
-            
+
             if (window.innerWidth > 768) {
                 mainWrapper.classList.toggle('shifted');
             }
@@ -508,67 +559,11 @@
             const overlay = document.getElementById('overlay');
             const hamburger = document.getElementById('hamburger');
             const mainWrapper = document.getElementById('mainWrapper');
-            
+
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
             hamburger.classList.remove('active');
             mainWrapper.classList.remove('shifted');
-        }
-
-        function handleScrollAnimation() {
-            const elements = document.querySelectorAll('.fade-in');
-            elements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 100) {
-                    el.classList.add('visible');
-                }
-            });
-        }
-
-        async function loadEvents() {
-            try {
-                const response = await fetch('/api/events');
-                if (!response.ok) throw new Error('Failed to fetch');
-                const events = await response.json();
-                
-                const container = document.getElementById('timelineContainer');
-                const sidebarContainer = document.getElementById('sidebarEvents');
-                
-                if (!events || events.length === 0) {
-                    container.innerHTML = '<div class="loading">No events found.</div>';
-                    if (sidebarContainer) sidebarContainer.innerHTML = '<div class="loading-events">No upcoming events.</div>';
-                    return;
-                }
-
-                container.innerHTML = events.map(event => `
-                    <div class="event-item">
-                        <div class="event-img">
-                            <img src="${event.imgurl}" alt="${event.caption}" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
-                        </div>
-                        <div class="event-details">
-                            <div class="event-caption">${escapeHtml(event.caption)}</div>
-                            <div class="event-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(event.date)}</div>
-                            <div class="event-time"><i class="fas fa-clock"></i> ${escapeHtml(event.time)}</div>
-                        </div>
-                    </div>
-                `).join('');
-
-                if (sidebarContainer) {
-                    sidebarContainer.innerHTML = events.map(event => `
-                        <div class="sidebar-event-item">
-                            <img src="${event.imgurl}" alt="${event.caption}" class="sidebar-event-img" onerror="this.src='https://via.placeholder.com/300x100?text=No+Image'">
-                            <div class="sidebar-event-caption">${escapeHtml(event.caption)}</div>
-                            <div class="sidebar-event-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(event.date)}</div>
-                            <div class="sidebar-event-time"><i class="fas fa-clock"></i> ${escapeHtml(event.time)}</div>
-                        </div>
-                    `).join('');
-                }
-                
-                handleScrollAnimation();
-            } catch (error) {
-                document.getElementById('timelineContainer').innerHTML = '<div class="loading">Error loading events.</div>';
-                console.error(error);
-            }
         }
 
         function escapeHtml(str) {
@@ -581,14 +576,79 @@
             });
         }
 
+        function handleScrollAnimation() {
+            const elements = document.querySelectorAll('.fade-in');
+            for (let i = 0; i < elements.length; i++) {
+                const el = elements[i];
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    el.classList.add('visible');
+                }
+            }
+        }
+
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/events');
+                if (!response.ok) throw new Error('Failed to fetch');
+                const events = await response.json();
+
+                const container = document.getElementById('timelineContainer');
+                const sidebarContainer = document.getElementById('sidebarEvents');
+
+                if (!events || events.length === 0) {
+                    container.innerHTML = '<div class="loading">No events found.</div>';
+                    if (sidebarContainer) sidebarContainer.innerHTML = '<div class="loading-events">No upcoming events.</div>';
+                    return;
+                }
+
+                let timelineHtml = '';
+                let sidebarHtml = '';
+
+                for (let i = 0; i < events.length; i++) {
+                    const event = events[i];
+                    timelineHtml += `
+                        <div class="event-item">
+                            <div class="event-img">
+                                <img src="${event.imgurl}" alt="${escapeHtml(event.caption)}" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+                            </div>
+                            <div class="event-details">
+                                <div class="event-caption">${escapeHtml(event.caption)}</div>
+                                <div class="event-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(event.date)}</div>
+                                <div class="event-time"><i class="fas fa-clock"></i> ${escapeHtml(event.time)}</div>
+                            </div>
+                        </div>
+                    `;
+                    sidebarHtml += `
+                        <div class="sidebar-event-item">
+                            <img src="${event.imgurl}" alt="${escapeHtml(event.caption)}" class="sidebar-event-img" onerror="this.src='https://via.placeholder.com/300x100?text=No+Image'">
+                            <div class="sidebar-event-caption">${escapeHtml(event.caption)}</div>
+                            <div class="sidebar-event-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(event.date)}</div>
+                            <div class="sidebar-event-time"><i class="fas fa-clock"></i> ${escapeHtml(event.time)}</div>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = timelineHtml;
+                if (sidebarContainer) {
+                    sidebarContainer.innerHTML = sidebarHtml;
+                }
+
+                handleScrollAnimation();
+            } catch (error) {
+                document.getElementById('timelineContainer').innerHTML = '<div class="loading">Error loading events.</div>';
+                console.error(error);
+            }
+        }
+
         const themeButton = document.getElementById('theme-button');
         const savedTheme = localStorage.getItem('theme');
-        
+
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
             themeButton.className = 'fas fa-sun';
         }
-        
+
         themeButton.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -599,7 +659,7 @@
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
             const hamburger = document.getElementById('hamburger');
-            
+
             if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
                 if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
                     closeMenu();
