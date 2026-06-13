@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Home Page</title>
-     <link rel="icon" href="https://iili.io/CC6nKHQ.png" type="image/png">
+    <link rel="icon" href="https://iili.io/CC6nKHQ.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -617,35 +617,58 @@
             color: #4caf50;
         }
 
-        .school-section {
+        .education-section {
+            margin-top: 10px;
+        }
+
+        .education-item {
             display: flex;
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            transition: all 0.3s;
         }
 
-        .school-logo {
-            width: 70px;
-            height: 70px;
+        .education-item:hover {
+            background: rgba(0, 0, 0, 0.4);
+            transform: translateX(5px);
+        }
+
+        .education-logo {
+            width: 60px;
+            height: 60px;
             border-radius: 15px;
             object-fit: cover;
             border: 2px solid rgba(255, 255, 255, 0.5);
         }
 
-        .school-info {
+        .education-info {
+            flex: 1;
             color: white;
         }
 
-        .school-name {
-            font-size: 1.3rem;
+        .education-name {
+            font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 5px;
         }
 
-        .school-address {
-            font-size: 0.95rem;
-            opacity: 0.9;
+        .education-address {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .education-level {
+            display: inline-block;
+            background: rgba(76, 175, 80, 0.7);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-top: 5px;
         }
 
         .footer {
@@ -680,11 +703,9 @@
             .container {
                 max-width: 960px;
             }
-            
             .dashboard-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
             .profile-info h1 {
                 font-size: 2.2rem;
             }
@@ -694,7 +715,6 @@
             .container {
                 max-width: 1200px;
             }
-            
             .dashboard-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
@@ -704,52 +724,42 @@
             .main-wrapper.shifted {
                 margin-left: 0;
             }
-            
             .profile-section {
                 flex-direction: column;
                 text-align: center;
             }
-            
             .profile-info h1 {
                 font-size: 1.8rem;
             }
-            
             .contact-info {
                 justify-content: center;
             }
-            
             .glass-card {
                 padding: 20px;
             }
-            
             .section-title {
                 font-size: 1.5rem;
                 justify-content: center;
             }
-            
             .interests-grid {
                 justify-content: center;
             }
-            
-            .school-section {
+            .education-item {
                 justify-content: center;
                 text-align: center;
+                flex-direction: column;
             }
-
             nav h6 {
                 display: none;
             }
-            
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
-            
             .typing-text {
                 white-space: normal;
                 animation: none;
                 border-right: none;
             }
-            
             .sidebar {
                 width: 280px;
                 left: -280px;
@@ -761,46 +771,36 @@
                 width: 140px;
                 height: 140px;
             }
-            
             .profile-info h1 {
                 font-size: 1.5rem;
             }
-            
             .badge {
                 font-size: 0.85rem;
                 padding: 6px 15px;
             }
-            
             .bio-text {
                 font-size: 0.95rem;
             }
-            
             .contact-link {
                 padding: 6px 12px;
                 font-size: 0.8rem;
             }
-            
             .section-title {
                 font-size: 1.3rem;
             }
-            
             .interest-item {
                 padding: 8px 16px;
                 font-size: 0.85rem;
             }
-            
             .roadmap-title {
                 font-size: 0.95rem;
             }
-            
             .roadmap-desc {
                 font-size: 0.8rem;
             }
-            
             .glass-card {
                 padding: 15px;
             }
-            
             .footer {
                 font-size: 0.7rem;
             }
@@ -815,7 +815,7 @@
                 <div></div>
                 <div></div>
             </div>
-            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo" id="navLogo">
+            <img src="https://iili.io/CC6nKHQ.png" alt="logo" id="navLogo">
             <h6 id="navTitle">EVSUista student</h6>
         </div>
         <i class="fas fa-moon" id="theme-button"></i>
@@ -858,7 +858,7 @@
                         <img src="" alt="Student Profile" class="profile-img" id="profileImg">
                     </div>
                     <div class="profile-info">
-                        <h1 id="studentName">@mythiannj</h1>
+                        <h1 id="studentName">CHRISTIAN L. CORPEZ</h1>
                         <div class="badge" id="studentBadge">
                             <i class="fas fa-graduation-cap"></i> 1st Year BS Agriculture Student
                         </div>
@@ -909,11 +909,11 @@
                         <h3><i class="fas fa-battery-quarter"></i> DEVICE POWER</h3>
                         <div class="dashboard-value battery-animation" id="devicePower">
                             <span class="battery-icon">
-                                <div class="battery-level" style="width: 12%"></div>
+                                <div class="battery-level" id="batteryLevelFill" style="width: 100%"></div>
                             </span>
-                            <span id="powerPercent">12%</span>
+                            <span id="powerPercent">100%</span>
                         </div>
-                        <div class="dashboard-label" id="powerStatus">Discharging</div>
+                        <div class="dashboard-label" id="powerStatus">N/A</div>
                     </div>
                     <div class="dashboard-card">
                         <h3><i class="fas fa-microchip"></i> ENGINE STRUCTURE</h3>
@@ -928,16 +928,27 @@
                 </div>
             </div>
 
-            <div class="glass-card fade-in" id="schoolCard">
+            <div class="glass-card fade-in" id="educationCard">
                 <div class="section-title">
-                    <i class="fas fa-university"></i>
+                    <i class="fas fa-graduation-cap"></i>
                     <h2>Education</h2>
                 </div>
-                <div class="school-section">
-                    <img src="" alt="University Logo" class="school-logo" id="schoolLogo">
-                    <div class="school-info">
-                        <div class="school-name" id="schoolName">Loading...</div>
-                        <div class="school-address" id="schoolAddress">Loading...</div>
+                <div class="education-section">
+                    <div class="education-item" id="collegeItem">
+                        <img src="" alt="College Logo" class="education-logo" id="collegeLogo">
+                        <div class="education-info">
+                            <div class="education-name" id="collegeName">Loading...</div>
+                            <div class="education-address" id="collegeAddress">Loading...</div>
+                            <span class="education-level">College / Tertiary</span>
+                        </div>
+                    </div>
+                    <div class="education-item" id="schoolItem">
+                        <img src="" alt="School Logo" class="education-logo" id="schoolLogo">
+                        <div class="education-info">
+                            <div class="education-name" id="schoolName">Loading...</div>
+                            <div class="education-address" id="schoolAddress">Loading...</div>
+                            <span class="education-level">Senior High School</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -987,7 +998,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="footer">
             <i class="fas fa-copyright"></i> 2026 All Rights Reserved. 
             <i class="fas fa-user-shield"></i> This page is managed by Web Admin
@@ -1000,11 +1011,11 @@
             const overlay = document.getElementById('overlay');
             const hamburger = document.getElementById('hamburger');
             const mainWrapper = document.getElementById('mainWrapper');
-            
+
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
             hamburger.classList.toggle('active');
-            
+
             if (window.innerWidth > 768) {
                 mainWrapper.classList.toggle('shifted');
             }
@@ -1015,7 +1026,7 @@
             const overlay = document.getElementById('overlay');
             const hamburger = document.getElementById('hamburger');
             const mainWrapper = document.getElementById('mainWrapper');
-            
+
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
             hamburger.classList.remove('active');
@@ -1047,29 +1058,29 @@
             });
             const clockElement = document.getElementById('systemTime');
             if (clockElement && clockElement.textContent !== '--') {
-                clockElement.innerHTML = `${dateString}<br><span style="font-size: 1rem;">${timeString}</span>`;
+                clockElement.innerHTML = dateString + '<br><span style="font-size: 1rem;">' + timeString + '</span>';
             }
         }
 
         function updateBatteryDisplay(powerValue, powerStatus) {
             let powerPercent = parseInt(powerValue);
             if (isNaN(powerPercent)) {
-                powerPercent = 12;
+                powerPercent = 100;
             }
-            
-            const batteryLevel = document.querySelector('.battery-level');
+            powerPercent = Math.min(Math.max(powerPercent, 0), 100);
+
+            const batteryLevel = document.getElementById('batteryLevelFill');
             const powerPercentSpan = document.getElementById('powerPercent');
             const powerCard = document.getElementById('powerCard');
-            
+
             if (batteryLevel) {
-                let widthPercent = Math.min(Math.max(powerPercent, 0), 100);
-                batteryLevel.style.width = `${widthPercent}%`;
+                batteryLevel.style.width = powerPercent + '%';
             }
-            
+
             if (powerPercentSpan) {
-                powerPercentSpan.textContent = `${powerPercent}%`;
+                powerPercentSpan.textContent = powerPercent + '%';
             }
-            
+
             if (powerCard) {
                 powerCard.classList.remove('power-warning', 'power-critical');
                 if (powerPercent <= 15) {
@@ -1078,7 +1089,7 @@
                     powerCard.classList.add('power-warning');
                 }
             }
-            
+
             const powerStatusElement = document.getElementById('powerStatus');
             if (powerStatusElement && powerStatus) {
                 powerStatusElement.textContent = powerStatus;
@@ -1101,18 +1112,18 @@
                 const response = await fetch('/api/config');
                 if (!response.ok) throw new Error('Failed to fetch config');
                 const config = await response.json();
-                
+
                 if (config.profile) {
-                    document.getElementById('studentName').textContent = config.profile.name || 'Mythiann N. Jay';
-                    document.getElementById('studentBadge').innerHTML = `<i class="fas fa-graduation-cap"></i> ${config.profile.year || '1st Year'} ${config.profile.course || 'BS Agriculture'} Student`;
+                    document.getElementById('studentName').textContent = config.profile.name || 'CHRISTIAN L. CORPEZ';
+                    document.getElementById('studentBadge').innerHTML = '<i class="fas fa-graduation-cap"></i> ' + (config.profile.year || '1st Year') + ' ' + (config.profile.course || 'BS Agriculture') + ' Student';
                     document.getElementById('studentBio').textContent = config.profile.bio || 'Passionate agriculture student...';
                     document.getElementById('studentEmail').textContent = config.profile.email || 'mythiannnj@gmail.com';
-                    document.getElementById('emailLink').href = `mailto:${config.profile.email || 'mythiannnj@gmail.com'}`;
-                    
+                    document.getElementById('emailLink').href = 'mailto:' + (config.profile.email || 'mythiannnj@gmail.com');
+
                     const facebookLink = document.getElementById('facebookLink');
                     const instagramLink = document.getElementById('instagramLink');
                     const tiktokLink = document.getElementById('tiktokLink');
-                    
+
                     if (config.profile.facebook) {
                         facebookLink.href = config.profile.facebook;
                     }
@@ -1122,58 +1133,69 @@
                     if (config.profile.tiktok) {
                         tiktokLink.href = config.profile.tiktok;
                     }
-                    
+
                     if (config.profile.profileImg) {
                         document.getElementById('profileImg').src = config.profile.profileImg;
+                    }
+                    
+                    if (config.profile.collegeLogo) {
+                        document.getElementById('collegeLogo').src = config.profile.collegeLogo;
                     }
                     if (config.profile.schoolLogo) {
                         document.getElementById('schoolLogo').src = config.profile.schoolLogo;
                         document.getElementById('navLogo').src = config.profile.schoolLogo;
                     }
-                    document.getElementById('schoolName').textContent = config.profile.schoolName || 'Eastern Visayas State University - Burauen Campus';
+                    
+                    document.getElementById('collegeName').textContent = config.profile.collegeName || 'Eastern Visayas State University - Burauen Campus';
+                    document.getElementById('collegeAddress').textContent = config.profile.collegeAddress || 'Burauen, Leyte, Philippines';
+                    document.getElementById('schoolName').textContent = config.profile.schoolName || 'Burauen Comprehensive National High School';
                     document.getElementById('schoolAddress').textContent = config.profile.schoolAddress || 'Burauen, Leyte, Philippines';
-                    document.getElementById('navTitle').textContent = config.profile.schoolName?.split('-')[0] || 'EVSU Burauen Campus';
+                    document.getElementById('navTitle').textContent = 'EVSUista student';
                 }
-                
+
                 if (config.systemInfo) {
                     document.getElementById('ipAddress').textContent = config.systemInfo.ipAddress || '--';
-                    
-                    const powerValue = config.systemInfo.devicePower || '12%';
-                    const powerStatus = config.systemInfo.powerStatus || 'Discharging';
+
+                    const powerValue = config.systemInfo.devicePower || '100';
+                    const powerStatus = config.systemInfo.powerStatus || 'N/A';
                     updateBatteryDisplay(powerValue, powerStatus);
                     document.getElementById('engineStructure').textContent = config.systemInfo.engineStructure || '--';
-                    
+
                     let userAgent = config.systemInfo.userAgent || '--';
                     if (userAgent.length > 80) {
                         userAgent = userAgent.substring(0, 77) + '...';
                     }
                     document.getElementById('userAgent').textContent = userAgent;
-                    
+
                     const timeElement = document.getElementById('systemTime');
                     if (config.systemInfo.systemTime) {
-                        const [hours, minutes, seconds] = config.systemInfo.systemTime.split(':');
+                        const timeParts = config.systemInfo.systemTime.split(':');
                         const now = new Date();
-                        now.setHours(parseInt(hours), parseInt(minutes), parseInt(seconds || 0));
-                        timeElement.innerHTML = `${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}<br><span style="font-size: 1rem;">${config.systemInfo.systemTime}</span>`;
+                        now.setHours(parseInt(timeParts[0]), parseInt(timeParts[1]), parseInt(timeParts[2] || 0));
+                        const dateOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+                        timeElement.innerHTML = now.toLocaleDateString('en-US', dateOptions) + '<br><span style="font-size: 1rem;">' + config.systemInfo.systemTime + '</span>';
                     }
                 }
-                
+
                 if (config.events && config.events.length > 0) {
                     const sidebarContainer = document.getElementById('sidebarEvents');
-                    sidebarContainer.innerHTML = config.events.map(event => `
-                        <div class="sidebar-event-item">
-                            <img src="${event.imgurl}" alt="${event.caption}" class="sidebar-event-img" onerror="this.src='https://via.placeholder.com/300x100?text=No+Image'">
-                            <div class="sidebar-event-caption">${escapeHtml(event.caption)}</div>
-                            <div class="sidebar-event-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(event.date)}</div>
-                            <div class="sidebar-event-time"><i class="fas fa-clock"></i> ${escapeHtml(event.time)}</div>
-                        </div>
-                    `).join('');
+                    let eventsHtml = '';
+                    for (let i = 0; i < config.events.length; i++) {
+                        const event = config.events[i];
+                        eventsHtml += '<div class="sidebar-event-item">' +
+                            '<img src="' + event.imgurl + '" alt="' + escapeHtml(event.caption) + '" class="sidebar-event-img" onerror="this.src=\'https://via.placeholder.com/300x100?text=No+Image\'">' +
+                            '<div class="sidebar-event-caption">' + escapeHtml(event.caption) + '</div>' +
+                            '<div class="sidebar-event-date"><i class="fas fa-calendar-day"></i> ' + escapeHtml(event.date) + '</div>' +
+                            '<div class="sidebar-event-time"><i class="fas fa-clock"></i> ' + escapeHtml(event.time) + '</div>' +
+                            '</div>';
+                    }
+                    sidebarContainer.innerHTML = eventsHtml;
                 }
-                
+
                 updateLiveClock();
                 setInterval(updateLiveClock, 1000);
                 handleScrollAnimation();
-                
+
             } catch (error) {
                 console.error('Error loading config:', error);
                 document.getElementById('studentBio').textContent = 'Error loading profile data.';
@@ -1182,12 +1204,12 @@
 
         const themeButton = document.getElementById('theme-button');
         const savedTheme = localStorage.getItem('theme');
-        
+
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
             themeButton.className = 'fas fa-sun';
         }
-        
+
         themeButton.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -1198,7 +1220,7 @@
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
             const hamburger = document.getElementById('hamburger');
-            
+
             if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
                 if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
                     closeMenu();
