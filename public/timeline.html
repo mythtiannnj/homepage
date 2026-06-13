@@ -366,6 +366,7 @@
 
         .event-img {
             flex: 0 0 200px;
+            position: relative;
         }
 
         .event-img img {
@@ -374,6 +375,33 @@
             object-fit: cover;
             border-radius: 15px;
             border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .save-img-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .save-img-btn:hover {
+            background: rgba(76, 175, 80, 0.9);
+            transform: scale(1.05);
+        }
+
+        .save-img-btn i {
+            font-size: 0.8rem;
         }
 
         .event-details {
@@ -397,6 +425,30 @@
             margin-right: 10px;
             margin-top: 8px;
             font-size: 0.9rem;
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(76, 175, 80, 0.95);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .toast-message.show {
+            transform: translateX(0);
+        }
+
+        .toast-message.error {
+            background: rgba(244, 67, 54, 0.95);
         }
 
         .loading {
@@ -455,14 +507,15 @@
                 width: 280px;
                 left: -280px;
             }
+            .event-img {
+                flex: auto;
+                position: relative;
+            }
         }
 
         @media (max-width: 600px) {
             .event-item {
                 flex-direction: column;
-            }
-            .event-img {
-                flex: auto;
             }
             .timeline {
                 padding-left: 20px;
@@ -472,6 +525,16 @@
             }
             .glass-card {
                 padding: 20px;
+            }
+            .toast-message {
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+                text-align: center;
+                transform: translateY(100px);
+            }
+            .toast-message.show {
+                transform: translateY(0);
             }
         }
     </style>
@@ -484,7 +547,7 @@
                 <div></div>
                 <div></div>
             </div>
-            <img src="https://iili.io/CC6nKHQ.png" alt="logo" id="navLogo">
+            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo" id="navLogo">
             <h6 id="navTitle">EVSUista student</h6>
         </div>
         <i class="fas fa-moon" id="theme-button"></i>
@@ -538,6 +601,10 @@
         </div>
     </div>
 
+    <div id="toastMessage" class="toast-message">
+        <i class="fas fa-check-circle"></i> Image saved successfully!
+    </div>
+
     <script>
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
@@ -576,6 +643,42 @@
             });
         }
 
+        function showToast(message, isError) {
+            const toast = document.getElementById('toastMessage');
+            toast.innerHTML = (isError ? '<i class="fas fa-exclamation-triangle"></i> ' : '<i class="fas fa-check-circle"></i> ') + message;
+            toast.classList.add('show');
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.remove('error');
+            }
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        async function saveImage(imageUrl, eventName) {
+            try {
+                const response = await fetch(imageUrl);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                const safeName = eventName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+                link.download = `event_${safeName}.jpg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(blobUrl);
+                
+                showToast(`Image saved: ${eventName}`, false);
+            } catch (error) {
+                console.error('Save failed:', error);
+                showToast('Failed to save image. Try right-click + Save As', true);
+            }
+        }
+
         function handleScrollAnimation() {
             const elements = document.querySelectorAll('.fade-in');
             for (let i = 0; i < elements.length; i++) {
@@ -607,10 +710,14 @@
 
                 for (let i = 0; i < events.length; i++) {
                     const event = events[i];
+                    const eventId = 'event_' + i + '_' + Date.now();
                     timelineHtml += `
                         <div class="event-item">
                             <div class="event-img">
-                                <img src="${event.imgurl}" alt="${escapeHtml(event.caption)}" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+                                <img src="${event.imgurl}" alt="${escapeHtml(event.caption)}" id="img_${eventId}" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+                                <button class="save-img-btn" onclick="saveImage('${event.imgurl}', '${escapeHtml(event.caption)}')">
+                                    <i class="fas fa-download"></i> Save Image
+                                </button>
                             </div>
                             <div class="event-details">
                                 <div class="event-caption">${escapeHtml(event.caption)}</div>
