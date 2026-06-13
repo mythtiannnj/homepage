@@ -42,52 +42,18 @@ app.get('/api/events', (req, res) => {
 
 // ========== PHILIPPINES & GLOBAL NEWS API ==========
 
-// RSS Feeds configuration - PHILIPPINES NEWS
+// Google News RSS Feeds - PHILIPPINES
 const PHILIPPINES_FEEDS = {
-    // Major Philippine News Outlets
-    inquirer: 'https://www.inquirer.net/fullfeed/',
-    philstar: 'https://www.philstar.com/rss',
-    manilaBulletin: 'https://mb.com.ph/feed',
-    gmanetwork: 'https://www.gmanetwork.com/news/newsfeed',
-    rappler: 'https://www.rappler.com/feed/',
-    cnnPH: 'https://www.cnnphilippines.com/rss',
-    
-    // Philippine Agriculture News
-    agriculturePH: 'https://business.inquirer.net/category/agribusiness/feed',
-    agricultureBusiness: 'https://www.philstar.com/business/agriculture/feed',
-    
-    // Philippine Technology News
-    techPH: 'https://technology.inquirer.net/feed',
-    techNewsPH: 'https://www.philstar.com/technology/feed'
+    agriculture: 'https://news.google.com/rss/search?q=agriculture+Philippines&hl=en-PH&gl=PH&ceid=PH:en',
+    technology: 'https://news.google.com/rss/search?q=technology+Philippines&hl=en-PH&gl=PH&ceid=PH:en',
+    climate: 'https://news.google.com/rss/search?q=climate+change+Philippines&hl=en-PH&gl=PH&ceid=PH:en',
+    farming: 'https://news.google.com/rss/search?q=farming+crops+Philippines&hl=en-PH&gl=PH&ceid=PH:en'
 };
 
-// RSS Feeds configuration - GLOBAL NEWS
+// Google News RSS Feeds - GLOBAL
 const GLOBAL_FEEDS = {
-    // International News
-    bbc: 'http://feeds.bbci.co.uk/news/world/rss.xml',
-    reuters: 'https://www.reuters.com/news/archive/worldNews?view=page&output=RSS',
-    aljazeera: 'https://www.aljazeera.com/xml/rss/all.xml',
-    
-    // Global Agriculture News
-    agriGlobal: 'https://www.agriculture.com/rss',
-    farmingGlobal: 'https://www.farminguk.com/news/feed.xml',
-    
-    // Global Technology News
-    techGlobal: 'https://feeds.feedburner.com/TechCrunch',
-    wired: 'https://www.wired.com/feed/rss',
-    theVerge: 'https://www.theverge.com/rss/index.xml'
-};
-
-// Alternative: Google News RSS (Most Reliable Fallback)
-const GOOGLE_NEWS_FEEDS = {
-    philippines: 'https://news.google.com/rss/search?q=Philippines&hl=en-PH&gl=PH&ceid=PH:en',
-    global: 'https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en',
-    agriculturePH: 'https://news.google.com/rss/search?q=agriculture+Philippines&hl=en-PH&gl=PH&ceid=PH:en',
-    agricultureGlobal: 'https://news.google.com/rss/search?q=global+agriculture+farming&hl=en-US&gl=US&ceid=US:en',
-    techPH: 'https://news.google.com/rss/search?q=technology+Philippines&hl=en-PH&gl=PH&ceid=PH:en',
-    techGlobal: 'https://news.google.com/rss/search?q=technology+innovation&hl=en-US&gl=US&ceid=US:en',
-    climatePH: 'https://news.google.com/rss/search?q=climate+change+Philippines&hl=en-PH&gl=PH&ceid=PH:en',
-    farmingPH: 'https://news.google.com/rss/search?q=farming+crops+Philippines&hl=en-PH&gl=PH&ceid=PH:en'
+    agriculture: 'https://news.google.com/rss/search?q=global+agriculture+farming&hl=en-US&gl=US&ceid=US:en',
+    technology: 'https://news.google.com/rss/search?q=technology+innovation+global&hl=en-US&gl=US&ceid=US:en'
 };
 
 // Helper function to fetch RSS and convert to JSON using rss2json API
@@ -96,7 +62,45 @@ async function fetchRSSFeed(feedUrl) {
     try {
         const response = await fetch(`${rss2jsonProxy}${encodeURIComponent(feedUrl)}`);
         const data = await response.json();
-        return data.status === 'ok' ? data.items : [];
+        
+        if (data.status === 'ok' && data.items) {
+            // Enhance articles with better image extraction
+            const enhancedItems = data.items.map(item => {
+                // Try to extract image from various sources
+                let imageUrl = null;
+                
+                // Check for thumbnail
+                if (item.thumbnail) {
+                    imageUrl = item.thumbnail;
+                }
+                // Check enclosure
+                else if (item.enclosure && item.enclosure.link) {
+                    imageUrl = item.enclosure.link;
+                }
+                // Extract from description
+                else if (item.description) {
+                    const imgMatch = item.description.match(/<img[^>]+src=["']([^"']+)["']/i);
+                    if (imgMatch && imgMatch[1]) {
+                        imageUrl = imgMatch[1];
+                    }
+                }
+                // Extract from content
+                else if (item.content) {
+                    const imgMatch = item.content.match(/<img[^>]+src=["']([^"']+)["']/i);
+                    if (imgMatch && imgMatch[1]) {
+                        imageUrl = imgMatch[1];
+                    }
+                }
+                
+                return {
+                    ...item,
+                    thumbnail: imageUrl,
+                    imageUrl: imageUrl
+                };
+            });
+            return enhancedItems;
+        }
+        return [];
     } catch (error) {
         console.error(`Error fetching RSS feed: ${feedUrl}`, error);
         return [];
@@ -105,12 +109,12 @@ async function fetchRSSFeed(feedUrl) {
 
 // ========== PHILIPPINES NEWS ENDPOINTS ==========
 
-// Get Philippines news (all local sources)
+// Get all Philippines news (all categories)
 app.get('/api/news/philippines/all', async (req, res) => {
     try {
-        const categories = Object.keys(GOOGLE_NEWS_FEEDS).filter(key => key.includes('PH') || key === 'philippines');
+        const categories = Object.keys(PHILIPPINES_FEEDS);
         const promises = categories.map(async (category) => {
-            const articles = await fetchRSSFeed(GOOGLE_NEWS_FEEDS[category]);
+            const articles = await fetchRSSFeed(PHILIPPINES_FEEDS[category]);
             return { category, articles };
         });
         
@@ -121,12 +125,13 @@ app.get('/api/news/philippines/all', async (req, res) => {
             result.articles.forEach(article => {
                 allArticles.push({
                     ...article,
-                    sourceCategory: result.category,
+                    category: result.category,
                     region: 'Philippines'
                 });
             });
         });
         
+        // Sort by publish date (newest first)
         allArticles.sort((a, b) => {
             const dateA = new Date(a.pubDate);
             const dateB = new Date(b.pubDate);
@@ -148,17 +153,12 @@ app.get('/api/news/philippines/all', async (req, res) => {
 // Get specific Philippines category news
 app.get('/api/news/philippines/:category', async (req, res) => {
     const category = req.params.category;
-    const feedMap = {
-        'general': GOOGLE_NEWS_FEEDS.philippines,
-        'agriculture': GOOGLE_NEWS_FEEDS.agriculturePH,
-        'technology': GOOGLE_NEWS_FEEDS.techPH,
-        'climate': GOOGLE_NEWS_FEEDS.climatePH,
-        'farming': GOOGLE_NEWS_FEEDS.farmingPH
-    };
+    const feedUrl = PHILIPPINES_FEEDS[category];
     
-    const feedUrl = feedMap[category];
     if (!feedUrl) {
-        return res.status(400).json({ error: 'Invalid category. Available: general, agriculture, technology, climate, farming' });
+        return res.status(400).json({ 
+            error: 'Invalid category. Available: agriculture, technology, climate, farming' 
+        });
     }
     
     try {
@@ -177,12 +177,12 @@ app.get('/api/news/philippines/:category', async (req, res) => {
 
 // ========== GLOBAL NEWS ENDPOINTS ==========
 
-// Get global news
+// Get all global news
 app.get('/api/news/global/all', async (req, res) => {
     try {
-        const categories = Object.keys(GOOGLE_NEWS_FEEDS).filter(key => !key.includes('PH') && key !== 'philippines');
+        const categories = Object.keys(GLOBAL_FEEDS);
         const promises = categories.map(async (category) => {
-            const articles = await fetchRSSFeed(GOOGLE_NEWS_FEEDS[category]);
+            const articles = await fetchRSSFeed(GLOBAL_FEEDS[category]);
             return { category, articles };
         });
         
@@ -193,7 +193,7 @@ app.get('/api/news/global/all', async (req, res) => {
             result.articles.forEach(article => {
                 allArticles.push({
                     ...article,
-                    sourceCategory: result.category,
+                    category: result.category,
                     region: 'Global'
                 });
             });
@@ -220,15 +220,12 @@ app.get('/api/news/global/all', async (req, res) => {
 // Get specific global category news
 app.get('/api/news/global/:category', async (req, res) => {
     const category = req.params.category;
-    const feedMap = {
-        'general': GOOGLE_NEWS_FEEDS.global,
-        'agriculture': GOOGLE_NEWS_FEEDS.agricultureGlobal,
-        'technology': GOOGLE_NEWS_FEEDS.techGlobal
-    };
+    const feedUrl = GLOBAL_FEEDS[category];
     
-    const feedUrl = feedMap[category];
     if (!feedUrl) {
-        return res.status(400).json({ error: 'Invalid category. Available: general, agriculture, technology' });
+        return res.status(400).json({ 
+            error: 'Invalid category. Available: agriculture, technology' 
+        });
     }
     
     try {
@@ -248,17 +245,47 @@ app.get('/api/news/global/:category', async (req, res) => {
 // ========== COMBINED NEWS (Philippines + Global) ==========
 app.get('/api/news/combined', async (req, res) => {
     try {
-        const [philippines, global] = await Promise.all([
-            fetch(`${req.protocol}://${req.get('host')}/api/news/philippines/all`).then(r => r.json()),
-            fetch(`${req.protocol}://${req.get('host')}/api/news/global/all`).then(r => r.json())
-        ]);
+        // Fetch Philippines categories
+        const phPromises = Object.keys(PHILIPPINES_FEEDS).map(async (category) => {
+            const articles = await fetchRSSFeed(PHILIPPINES_FEEDS[category]);
+            return articles.map(article => ({
+                ...article,
+                category: category,
+                region: 'Philippines'
+            }));
+        });
+        
+        // Fetch Global categories
+        const globalPromises = Object.keys(GLOBAL_FEEDS).map(async (category) => {
+            const articles = await fetchRSSFeed(GLOBAL_FEEDS[category]);
+            return articles.map(article => ({
+                ...article,
+                category: category,
+                region: 'Global'
+            }));
+        });
+        
+        const phResults = await Promise.all(phPromises);
+        const globalResults = await Promise.all(globalPromises);
+        
+        const philippines = phResults.flat();
+        const global = globalResults.flat();
+        
+        // Sort each by date
+        philippines.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+        global.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+        
+        const allArticles = [...philippines, ...global];
+        allArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
         
         res.json({
             success: true,
-            philippines: philippines.articles || [],
-            global: global.articles || [],
-            totalPhilippines: philippines.total || 0,
-            totalGlobal: global.total || 0
+            philippines: philippines,
+            global: global,
+            allArticles: allArticles,
+            totalPhilippines: philippines.length,
+            totalGlobal: global.length,
+            total: allArticles.length
         });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -268,10 +295,10 @@ app.get('/api/news/combined', async (req, res) => {
 // ========== SEARCH NEWS (Philippines specific) ==========
 app.get('/api/news/search/:query', async (req, res) => {
     const query = req.params.query;
-    const phSearchUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}+Philippines&hl=en-PH&gl=PH&ceid=PH:en`;
+    const searchUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}+Philippines&hl=en-PH&gl=PH&ceid=PH:en`;
     
     try {
-        const articles = await fetchRSSFeed(phSearchUrl);
+        const articles = await fetchRSSFeed(searchUrl);
         res.json({
             success: true,
             query: query,
@@ -284,6 +311,24 @@ app.get('/api/news/search/:query', async (req, res) => {
     }
 });
 
+// ========== HEALTH CHECK ENDPOINT ==========
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        endpoints: {
+            philippines: '/api/news/philippines/:category',
+            global: '/api/news/global/:category',
+            combined: '/api/news/combined',
+            search: '/api/news/search/:query'
+        },
+        availableCategories: {
+            philippines: ['agriculture', 'technology', 'climate', 'farming'],
+            global: ['agriculture', 'technology']
+        }
+    });
+});
+
 // ========== SERVE PAGES ==========
 app.get('/timeline', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'timeline.html'));
@@ -293,26 +338,37 @@ app.get('/newsfeed', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'newsfeed.html'));
 });
 
+// Catch-all route to serve index.html
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Start server
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`\n🚀 Server running on http://localhost:${PORT}`);
     console.log(`\n📰 News API Endpoints:`);
-    console.log(`  🇵🇭 Philippines News:`);
-    console.log(`     GET /api/news/philippines/all`);
-    console.log(`     GET /api/news/philippines/general`);
-    console.log(`     GET /api/news/philippines/agriculture`);
-    console.log(`     GET /api/news/philippines/technology`);
-    console.log(`     GET /api/news/philippines/climate`);
-    console.log(`     GET /api/news/philippines/farming`);
-    console.log(`  🌍 Global News:`);
-    console.log(`     GET /api/news/global/all`);
-    console.log(`     GET /api/news/global/general`);
-    console.log(`     GET /api/news/global/agriculture`);
-    console.log(`     GET /api/news/global/technology`);
-    console.log(`  🔍 Combined & Search:`);
-    console.log(`     GET /api/news/combined`);
-    console.log(`     GET /api/news/search/:query`);
+    console.log(`\n🇵🇭 Philippines News:`);
+    console.log(`   GET /api/news/philippines/agriculture`);
+    console.log(`   GET /api/news/philippines/technology`);
+    console.log(`   GET /api/news/philippines/climate`);
+    console.log(`   GET /api/news/philippines/farming`);
+    console.log(`   GET /api/news/philippines/all`);
+    console.log(`\n🌍 Global News:`);
+    console.log(`   GET /api/news/global/agriculture`);
+    console.log(`   GET /api/news/global/technology`);
+    console.log(`   GET /api/news/global/all`);
+    console.log(`\n🔄 Combined:`);
+    console.log(`   GET /api/news/combined`);
+    console.log(`   GET /api/news/search/:query`);
+    console.log(`   GET /api/health`);
+    console.log(`\n📄 Pages:`);
+    console.log(`   http://localhost:${PORT}/ - Home Page`);
+    console.log(`   http://localhost:${PORT}/timeline - Events Timeline`);
+    console.log(`   http://localhost:${PORT}/newsfeed - News Feed\n`);
+});
+
+// Handle graceful shutdown
+process.on('SIGINT', () => {
+    console.log('\n👋 Shutting down server...');
+    process.exit();
 });
