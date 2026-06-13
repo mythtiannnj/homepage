@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Profile | 1st Year BS Agriculture</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Home Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -17,6 +17,8 @@
             min-height: 100vh;
             background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2073&auto=format') no-repeat center center/cover;
             background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
             position: relative;
             transition: background 0.5s ease;
         }
@@ -52,6 +54,8 @@
         body.dark-mode {
             background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format') no-repeat center center/cover;
             background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
         }
 
         body.dark-mode::before {
@@ -290,6 +294,7 @@
             margin-left: 0;
             transition: margin-left 0.3s ease;
             padding: 100px 20px 20px;
+            min-height: 100vh;
         }
 
         .main-wrapper.shifted {
@@ -670,6 +675,30 @@
             display: block;
         }
 
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .container {
+                max-width: 960px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .profile-info h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (min-width: 1201px) {
+            .container {
+                max-width: 1200px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
             .main-wrapper.shifted {
                 margin-left: 0;
@@ -719,6 +748,61 @@
                 animation: none;
                 border-right: none;
             }
+            
+            .sidebar {
+                width: 280px;
+                left: -280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-img {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .profile-info h1 {
+                font-size: 1.5rem;
+            }
+            
+            .badge {
+                font-size: 0.85rem;
+                padding: 6px 15px;
+            }
+            
+            .bio-text {
+                font-size: 0.95rem;
+            }
+            
+            .contact-link {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+            
+            .interest-item {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+            
+            .roadmap-title {
+                font-size: 0.95rem;
+            }
+            
+            .roadmap-desc {
+                font-size: 0.8rem;
+            }
+            
+            .glass-card {
+                padding: 15px;
+            }
+            
+            .footer {
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -730,8 +814,8 @@
                 <div></div>
                 <div></div>
             </div>
-            <img src="https://iili.io/CCgmBup.jpg" alt="logo" id="navLogo">
-            <h6 id="navTitle">EVSU Burauen Campus</h6>
+            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo" id="navLogo">
+            <h6 id="navTitle">EVSUista student</h6>
         </div>
         <i class="fas fa-moon" id="theme-button"></i>
     </nav>
@@ -773,7 +857,7 @@
                         <img src="" alt="Student Profile" class="profile-img" id="profileImg">
                     </div>
                     <div class="profile-info">
-                        <h1 id="studentName">Mythiann N. Jay</h1>
+                        <h1 id="studentName">@mythiannj</h1>
                         <div class="badge" id="studentBadge">
                             <i class="fas fa-graduation-cap"></i> 1st Year BS Agriculture Student
                         </div>
@@ -967,23 +1051,36 @@
         }
 
         function updateBatteryDisplay(powerValue, powerStatus) {
-            const powerPercent = parseInt(powerValue);
+            let powerPercent = parseInt(powerValue);
+            if (isNaN(powerPercent)) {
+                powerPercent = 12;
+            }
+            
             const batteryLevel = document.querySelector('.battery-level');
             const powerPercentSpan = document.getElementById('powerPercent');
             const powerCard = document.getElementById('powerCard');
             
             if (batteryLevel) {
-                batteryLevel.style.width = `${Math.min(Math.max(powerPercent, 0), 100)}%`;
+                let widthPercent = Math.min(Math.max(powerPercent, 0), 100);
+                batteryLevel.style.width = `${widthPercent}%`;
             }
+            
             if (powerPercentSpan) {
                 powerPercentSpan.textContent = `${powerPercent}%`;
             }
             
-            powerCard.classList.remove('power-warning', 'power-critical');
-            if (powerPercent <= 15) {
-                powerCard.classList.add('power-critical');
-            } else if (powerPercent <= 30) {
-                powerCard.classList.add('power-warning');
+            if (powerCard) {
+                powerCard.classList.remove('power-warning', 'power-critical');
+                if (powerPercent <= 15) {
+                    powerCard.classList.add('power-critical');
+                } else if (powerPercent <= 30) {
+                    powerCard.classList.add('power-warning');
+                }
+            }
+            
+            const powerStatusElement = document.getElementById('powerStatus');
+            if (powerStatusElement && powerStatus) {
+                powerStatusElement.textContent = powerStatus;
             }
         }
 
@@ -1043,7 +1140,6 @@
                     const powerValue = config.systemInfo.devicePower || '12%';
                     const powerStatus = config.systemInfo.powerStatus || 'Discharging';
                     updateBatteryDisplay(powerValue, powerStatus);
-                    document.getElementById('powerStatus').textContent = powerStatus;
                     document.getElementById('engineStructure').textContent = config.systemInfo.engineStructure || '--';
                     
                     let userAgent = config.systemInfo.userAgent || '--';
