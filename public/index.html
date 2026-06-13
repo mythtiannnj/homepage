@@ -815,7 +815,7 @@
                 <div></div>
                 <div></div>
             </div>
-            <img src="https://iili.io/CC6nKHQ.png" alt="logo" id="navLogo">
+            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo" id="navLogo">
             <h6 id="navTitle">EVSUista student</h6>
         </div>
         <i class="fas fa-moon" id="theme-button"></i>
@@ -1006,6 +1006,10 @@
     </div>
 
     <script>
+        // FIXED: Navigation logo is HARDCODED and will NEVER change
+        // The nav logo will ALWAYS be https://iili.io/CC6nKHQ.jpg
+        // School logos only affect the education section, NOT the navigation bar
+        
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
@@ -1098,13 +1102,14 @@
 
         function handleScrollAnimation() {
             const elements = document.querySelectorAll('.fade-in');
-            elements.forEach(el => {
+            for (let i = 0; i < elements.length; i++) {
+                const el = elements[i];
                 const rect = el.getBoundingClientRect();
                 const isVisible = rect.top < window.innerHeight - 100;
                 if (isVisible) {
                     el.classList.add('visible');
                 }
-            });
+            }
         }
 
         async function loadConfig() {
@@ -1138,13 +1143,18 @@
                         document.getElementById('profileImg').src = config.profile.profileImg;
                     }
                     
+                    // College logo (for education section)
                     if (config.profile.collegeLogo) {
                         document.getElementById('collegeLogo').src = config.profile.collegeLogo;
                     }
+                    
+                    // Senior High School logo (for education section ONLY)
                     if (config.profile.schoolLogo) {
                         document.getElementById('schoolLogo').src = config.profile.schoolLogo;
-                        document.getElementById('navLogo').src = config.profile.schoolLogo;
                     }
+                    
+                    // IMPORTANT: Navigation logo is NOT changed here
+                    // The nav logo stays as https://iili.io/CC6nKHQ.jpg (hardcoded in HTML)
                     
                     document.getElementById('collegeName').textContent = config.profile.collegeName || 'Eastern Visayas State University - Burauen Campus';
                     document.getElementById('collegeAddress').textContent = config.profile.collegeAddress || 'Burauen, Leyte, Philippines';
