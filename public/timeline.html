@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline | Events</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2073&auto=format') no-repeat center center/cover;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        nav img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        nav h6 {
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        #theme-button {
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        #theme-button:hover {
+            transform: rotate(20deg);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease;
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-header h2 {
+            color: #4caf50;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75rem;
+        }
+
+        .sidebar-menu {
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background: rgba(76, 175, 80, 0.3);
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: rgba(76, 175, 80, 0.5);
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .menu-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 15px 0;
+        }
+
+        .events-title {
+            color: white;
+            font-size: 1rem;
+            margin: 15px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 5px;
+        }
+
+        .events-title i {
+            color: #4caf50;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-event-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-event-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .sidebar-event-img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-event-caption {
+            color: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-event-date, .sidebar-event-time {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 10px;
+        }
+
+        .loading-events {
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+            padding: 100px 20px 20px;
+        }
+
+        .main-wrapper.shifted {
+            margin-left: 300px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title i {
+            color: #4caf50;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: rgba(76, 175, 80, 0.6);
+        }
+
+        .event-item {
+            position: relative;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 20px;
+            transition: transform 0.3s;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .event-item:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .event-item::before {
+            content: '';
+            position: absolute;
+            left: -27px;
+            top: 30px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4caf50;
+            border: 2px solid white;
+            z-index: 2;
+        }
+
+        .event-img {
+            flex: 0 0 200px;
+        }
+
+        .event-img img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .event-details {
+            flex: 1;
+            color: white;
+        }
+
+        .event-caption {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .event-date, .event-time {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-right: 10px;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            color: white;
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .event-item {
+                flex-direction: column;
+            }
+            .event-img {
+                flex: auto;
+            }
+            .timeline {
+                padding-left: 20px;
+            }
+            .main-wrapper.shifted {
+                margin-left: 0;
+            }
+            nav h6 {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="navbar-left">
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <img src="https://iili.io/CCgmBup.jpg" alt="logo" />
+            <h6>EVSU Burauen Campus</h6>
+        </div>
+        <i class="fas fa-moon" id="theme-button"></i>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <div class="subtitle">Student Profile Navigation</div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="/" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">HOME</span>
+            </a>
+            <a href="/timeline" class="menu-item active">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="menu-text">TIMELINE</span>
+            </a>
+        </div>
+        
+        <div class="menu-divider"></div>
+        
+        <div class="events-title">
+            <i class="fas fa-calendar-week"></i>
+            <span>Upcoming Events</span>
+        </div>
+        <div class="events-container" id="sidebarEvents">
+            <div class="loading-events">
+                <i class="fas fa-spinner fa-pulse"></i> Loading events...
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+    <div class="main-wrapper" id="mainWrapper">
+        <div class="container">
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h2>Events Timeline</h2>
+                </div>
+                <div id="timelineContainer" class="timeline">
+                    <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading events...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const hamburger = document.getElementById('hamburger');
+            const mainWrapper = document.getElementById('mainWrapper');
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            
+            if (window.innerWidth > 768) {
+                mainWrapper.classList.toggle('shifted');
+            }
+        }
+
+        function closeMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const hamburger = document.getElementById('hamburger');
+            const mainWrapper = document.getElementById('mainWrapper');
+            
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            hamburger.classList.remove('active');
+            mainWrapper.classList.remove('shifted');
+        }
+
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/events');
+                if (!response.ok) throw new Error('Failed to fetch');
+                const events = await response.json();
+                
+                const container = document.getElementById('timelineContainer');
+                const sidebarContainer = document.getElementById('sidebarEvents');
+                
+                if (!events || events.length === 0) {
+                    container.innerHTML = '<div class="loading">No events found.</div>';
+                    if (sidebarContainer) sidebarContainer.innerHTML = '<div class="loading-events">No upcoming events.</div>';
+                    return;
+                }
+
+                container.innerHTML = events.map(event => `
+                    <div class="event-item">
+                        <div class="event-img">
+                            <img src="${event.imgurl}" alt="${event.caption}" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+                        </div>
+                        <div class="event-details">
+                            <div class="event-caption">${escapeHtml(event.caption)}</div>
+                            <div class="event-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(event.date)}</div>
+                            <div class="event-time"><i class="fas fa-clock"></i> ${escapeHtml(event.time)}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                if (sidebarContainer) {
+                    sidebarContainer.innerHTML = events.map(event => `
+                        <div class="sidebar-event-item">
+                            <img src="${event.imgurl}" alt="${event.caption}" class="sidebar-event-img" onerror="this.src='https://via.placeholder.com/300x100?text=No+Image'">
+                            <div class="sidebar-event-caption">${escapeHtml(event.caption)}</div>
+                            <div class="sidebar-event-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(event.date)}</div>
+                            <div class="sidebar-event-time"><i class="fas fa-clock"></i> ${escapeHtml(event.time)}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                document.getElementById('timelineContainer').innerHTML = '<div class="loading">Error loading events.</div>';
+                console.error(error);
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        const themeButton = document.getElementById('theme-button');
+        let isDark = true;
+        
+        themeButton.addEventListener('click', () => {
+            if (isDark) {
+                document.body.style.background = "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format') no-repeat center center/cover";
+                document.body.style.backgroundAttachment = "fixed";
+                themeButton.className = "fas fa-sun";
+            } else {
+                document.body.style.background = "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2073&auto=format') no-repeat center center/cover";
+                document.body.style.backgroundAttachment = "fixed";
+                themeButton.className = "fas fa-moon";
+            }
+            isDark = !isDark;
+        });
+
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.getElementById('hamburger');
+            
+            if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+                if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
+                    closeMenu();
+                }
+            }
+        });
+
+        loadEvents();
+    </script>
+</body>
+</html>
