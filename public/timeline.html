@@ -21,7 +21,7 @@
             background-size: cover;
             background-position: center;
             position: relative;
-            transition: background 0.5s ease;
+            transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body.dark-mode {
@@ -44,7 +44,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.3);
             z-index: 0;
-            transition: background 0.3s ease;
+            transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .fade-in {
@@ -72,6 +72,12 @@
             align-items: center;
             z-index: 1000;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode nav {
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .navbar-left {
@@ -115,6 +121,11 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid rgba(255, 255, 255, 0.5);
+            transition: border-color 0.3s ease;
+        }
+
+        body.dark-mode nav img {
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         nav h6 {
@@ -122,13 +133,14 @@
             font-size: 1rem;
             font-weight: 500;
             letter-spacing: 1px;
+            transition: color 0.3s ease;
         }
 
         #theme-button {
             font-size: 1.5rem;
             color: white;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: transform 0.3s, color 0.3s ease;
         }
 
         #theme-button:hover {
@@ -144,10 +156,14 @@
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(20px);
             border-right: 1px solid rgba(255, 255, 255, 0.2);
-            transition: left 0.3s ease;
+            transition: left 0.3s ease, background 0.3s ease;
             z-index: 999;
             padding: 20px;
             overflow-y: auto;
+        }
+
+        body.dark-mode .sidebar {
+            background: rgba(0, 0, 0, 0.92);
         }
 
         .sidebar.active {
@@ -298,7 +314,12 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin-bottom: 25px;
-            transition: transform 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .glass-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .glass-card:hover {
@@ -312,6 +333,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            transition: color 0.3s ease;
         }
 
         .section-title i {
@@ -340,15 +362,23 @@
             backdrop-filter: blur(5px);
             border-radius: 20px;
             padding: 20px;
-            transition: transform 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
         }
 
+        body.dark-mode .event-item {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
         .event-item:hover {
             transform: scale(1.02);
             background: rgba(255, 255, 255, 0.25);
+        }
+
+        body.dark-mode .event-item:hover {
+            background: rgba(0, 0, 0, 0.45);
         }
 
         .event-item::before {
@@ -464,6 +494,7 @@
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.85rem;
             margin-top: 20px;
+            transition: color 0.3s ease;
         }
 
         .footer i {
@@ -480,10 +511,16 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 998;
             display: none;
+            transition: background 0.3s ease;
         }
 
         .overlay.active {
             display: block;
+        }
+
+        /* Theme transition animation class */
+        .theme-changing {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @media (min-width: 769px) and (max-width: 1200px) {
@@ -570,6 +607,10 @@
             <a href="/newsfeed" class="menu-item">
                 <i class="fas fa-newspaper"></i>
                 <span class="menu-text">NEWSFEED</span>
+            </a>
+            <a href="/bible" class="menu-item">
+                <i class="fas fa-bible"></i>
+                <span class="menu-text">BIBLE</span>
             </a>
         </div>
         <div class="menu-divider"></div>
@@ -752,20 +793,41 @@
             }
         }
 
+        // Smooth Theme Toggle Function
+        function toggleTheme() {
+            const themeButton = document.getElementById('theme-button');
+            const isDark = document.body.classList.contains('dark-mode');
+            
+            document.body.classList.add('theme-changing');
+            
+            if (isDark) {
+                document.body.classList.remove('dark-mode');
+                themeButton.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark-mode');
+                themeButton.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+            
+            setTimeout(() => {
+                document.body.classList.remove('theme-changing');
+            }, 400);
+        }
+
+        // Theme toggle with smooth transition
         const themeButton = document.getElementById('theme-button');
         const savedTheme = localStorage.getItem('theme');
 
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
             themeButton.className = 'fas fa-sun';
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeButton.className = 'fas fa-moon';
         }
 
-        themeButton.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            themeButton.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        });
+        themeButton.addEventListener('click', toggleTheme);
 
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
