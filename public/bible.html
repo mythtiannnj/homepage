@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Bible Verse | Daily Inspiration</title>
+    <link rel="icon" href="https://iili.io/CC6nKHQ.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2073&auto=format') no-repeat center center/cover;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Smooth overlay transition */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+            transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format') no-repeat center center/cover;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+
+        body.dark-mode::before {
+            background: rgba(0, 0, 0, 0.65);
+        }
+
+        /* Smooth transition for all theme-affected elements */
+        .glass-card,
+        .sidebar,
+        nav,
+        .menu-item,
+        .fetch-btn,
+        .sidebar-event-item,
+        .greeting-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Theme transition wrapper */
+        .theme-transition {
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode nav {
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        nav img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            transition: border-color 0.3s ease;
+        }
+
+        body.dark-mode nav img {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        nav h6 {
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        #theme-button {
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, color 0.3s ease;
+        }
+
+        #theme-button:hover {
+            transform: rotate(20deg);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease, background 0.3s ease;
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        body.dark-mode .sidebar {
+            background: rgba(0, 0, 0, 0.92);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-header h2 {
+            color: #4caf50;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75rem;
+        }
+
+        .sidebar-menu {
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background: rgba(76, 175, 80, 0.3);
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: rgba(76, 175, 80, 0.5);
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .menu-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 15px 0;
+        }
+
+        .events-title {
+            color: white;
+            font-size: 1rem;
+            margin: 15px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 5px;
+        }
+
+        .events-title i {
+            color: #4caf50;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-event-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-event-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .sidebar-event-img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-event-caption {
+            color: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-event-date, .sidebar-event-time {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 10px;
+        }
+
+        .loading-events {
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+            padding: 100px 20px 20px;
+            min-height: 100vh;
+        }
+
+        .main-wrapper.shifted {
+            margin-left: 300px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 25px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .glass-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .section-title i {
+            color: #4caf50;
+            font-size: 2.5rem;
+        }
+
+        .bible-icon-large {
+            font-size: 4rem;
+            color: #4caf50;
+            margin-bottom: 20px;
+            animation: gentlePulse 2s ease infinite;
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+
+        .verse-text {
+            color: white;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-weight: 500;
+            font-style: italic;
+            quotes: "“" "”" "‘" "’";
+            transition: color 0.3s ease;
+        }
+
+        .verse-text::before {
+            content: "“";
+            font-size: 2rem;
+            opacity: 0.7;
+        }
+
+        .verse-text::after {
+            content: "”";
+            font-size: 2rem;
+            opacity: 0.7;
+            vertical-align: top;
+        }
+
+        .verse-reference {
+            color: #4caf50;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .verse-translation {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+            transition: color 0.3s ease;
+        }
+
+        .fetch-btn {
+            background: rgba(76, 175, 80, 0.9);
+            border: none;
+            color: white;
+            padding: 14px 35px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fetch-btn:hover {
+            background: rgba(76, 175, 80, 1);
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .fetch-btn:active {
+            transform: scale(0.98);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s ease infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-top: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .footer i {
+            color: #4caf50;
+            margin: 0 4px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+            transition: background 0.3s ease;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Theme transition animation class */
+        .theme-changing {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper.shifted {
+                margin-left: 0;
+            }
+            .glass-card {
+                padding: 25px;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .verse-text {
+                font-size: 1.2rem;
+            }
+            .verse-reference {
+                font-size: 1rem;
+            }
+            nav h6 {
+                display: none;
+            }
+            .sidebar {
+                width: 280px;
+                left: -280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 20px;
+            }
+            .verse-text {
+                font-size: 1rem;
+            }
+            .fetch-btn {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="navbar-left">
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo">
+            <h6>Daily Bible Verse</h6>
+        </div>
+        <i class="fas fa-moon" id="theme-button"></i>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <div class="subtitle">Student Profile Navigation</div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="/" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">HOME</span>
+            </a>
+            <a href="/timeline" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="menu-text">TIMELINE</span>
+            </a>
+            <a href="/newsfeed" class="menu-item">
+                <i class="fas fa-newspaper"></i>
+                <span class="menu-text">NEWSFEED</span>
+            </a>
+            <a href="/bible" class="menu-item active">
+                <i class="fas fa-bible"></i>
+                <span class="menu-text">BIBLE</span>
+            </a>
+        </div>
+        <div class="menu-divider"></div>
+        <div class="events-title">
+            <i class="fas fa-calendar-week"></i>
+            <span>Upcoming Events</span>
+        </div>
+        <div class="events-container" id="sidebarEvents">
+            <div class="loading-events">
+                <i class="fas fa-spinner fa-pulse"></i> Loading events...
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+    <div class="main-wrapper" id="mainWrapper">
+        <div class="container">
+            <div class="glass-card fade-in">
+                <div class="bible-icon-large">
+                    <i class="fas fa-bible"></i>
+                </div>
+                <div class="section-title">
+                    <i class="fas fa-praying-hands"></i>
+                    <h2>Daily Bible Verse</h2>
+                </div>
+                
+                <div id="verseContent">
+                    <div class="loading-spinner" style="margin: 20px auto;"></div>
+                    <p style="color: white; margin-top: 10px;">Loading verse...</p>
+                </div>
+                
+                <button class="fetch-btn" id="fetchNewVerseBtn">
+                    <i class="fas fa-sync-alt"></i> New Verse
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <i class="fas fa-copyright"></i> 2026 All Rights Reserved. 
+            <i class="fas fa-bible"></i> Scripture from Bible API
+        </div>
+    </div>
+
+    <script>
+        // Sidebar Functions
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const hamburger = document.getElementById('hamburger');
+            const mainWrapper = document.getElementById('mainWrapper');
+
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            hamburger.classList.toggle('active');
+
+            if (window.innerWidth > 768) {
+                mainWrapper.classList.toggle('shifted');
+            }
+        }
+
+        function closeMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const hamburger = document.getElementById('hamburger');
+            const mainWrapper = document.getElementById('mainWrapper');
+
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            hamburger.classList.remove('active');
+            mainWrapper.classList.remove('shifted');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Load Bible Verse
+        async function loadBibleVerse() {
+            const verseContainer = document.getElementById('verseContent');
+            verseContainer.innerHTML = '<div class="loading-spinner" style="margin: 20px auto;"></div><p style="color: white; margin-top: 10px;">Loading verse...</p>';
+            
+            try {
+                const response = await fetch('/api/bible/random');
+                const data = await response.json();
+                
+                let verseText, reference, translation;
+                
+                if (data.reference) {
+                    verseText = data.verse;
+                    reference = data.reference;
+                    translation = data.translation || 'World English Bible';
+                } else if (data.fallback) {
+                    verseText = data.fallback.verse;
+                    reference = data.fallback.reference;
+                    translation = data.fallback.translation;
+                } else {
+                    throw new Error('Failed to load verse');
+                }
+                
+                // Clean up verse text (remove extra newlines and spaces)
+                verseText = verseText.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+                
+                verseContainer.innerHTML = `
+                    <div class="verse-text">${escapeHtml(verseText)}</div>
+                    <div class="verse-reference">— ${escapeHtml(reference)} —</div>
+                    <div class="verse-translation"><i class="fas fa-book-open"></i> ${escapeHtml(translation)}</div>
+                `;
+            } catch (error) {
+                console.error('Error loading verse:', error);
+                verseContainer.innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Unable to load verse. Please check your connection and try again.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load Events for Sidebar
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/events');
+                if (!response.ok) throw new Error('Failed to fetch');
+                const events = await response.json();
+
+                const sidebarContainer = document.getElementById('sidebarEvents');
+
+                if (!events || events.length === 0) {
+                    sidebarContainer.innerHTML = '<div class="loading-events">No upcoming events.</div>';
+                    return;
+                }
+
+                let sidebarHtml = '';
+                for (let i = 0; i < events.length; i++) {
+                    const event = events[i];
+                    sidebarHtml += `
+                        <div class="sidebar-event-item">
+                            <img src="${event.imgurl}" alt="${escapeHtml(event.caption)}" class="sidebar-event-img" onerror="this.src='https://via.placeholder.com/300x100?text=No+Image'">
+                            <div class="sidebar-event-caption">${escapeHtml(event.caption)}</div>
+                            <div class="sidebar-event-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(event.date)}</div>
+                            <div class="sidebar-event-time"><i class="fas fa-clock"></i> ${escapeHtml(event.time)}</div>
+                        </div>
+                    `;
+                }
+                sidebarContainer.innerHTML = sidebarHtml;
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('sidebarEvents').innerHTML = '<div class="loading-events">Error loading events.</div>';
+            }
+        }
+
+        // Handle scroll animations
+        function handleScrollAnimation() {
+            const elements = document.querySelectorAll('.fade-in');
+            for (let i = 0; i < elements.length; i++) {
+                const el = elements[i];
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    el.classList.add('visible');
+                }
+            }
+        }
+
+        // Smooth Theme Toggle Function
+        function toggleTheme() {
+            const themeButton = document.getElementById('theme-button');
+            const isDark = document.body.classList.contains('dark-mode');
+            
+            // Add a smooth transition class
+            document.body.classList.add('theme-changing');
+            
+            // Toggle dark mode
+            if (isDark) {
+                document.body.classList.remove('dark-mode');
+                themeButton.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark-mode');
+                themeButton.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+            
+            // Remove transition class after animation completes
+            setTimeout(() => {
+                document.body.classList.remove('theme-changing');
+            }, 400);
+        }
+
+        // Theme toggle with smooth transition
+        const themeButton = document.getElementById('theme-button');
+        const savedTheme = localStorage.getItem('theme');
+
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeButton.className = 'fas fa-sun';
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeButton.className = 'fas fa-moon';
+        }
+
+        // Add click event with smooth transition
+        themeButton.addEventListener('click', toggleTheme);
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.getElementById('hamburger');
+
+            if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+                if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
+                    closeMenu();
+                }
+            }
+        });
+
+        // Event Listeners
+        document.getElementById('fetchNewVerseBtn').addEventListener('click', () => {
+            loadBibleVerse();
+        });
+
+        window.addEventListener('scroll', handleScrollAnimation);
+        
+        // Initialize
+        window.addEventListener('load', () => {
+            loadBibleVerse();
+            loadEvents();
+            handleScrollAnimation();
+        });
+    </script>
+</body>
+</html>
