@@ -960,7 +960,7 @@
             </div>
             <h2 class="greeting-title" id="greetingTitle">Welcome!</h2>
             <p class="greeting-message" id="greetingMessage">
-                Welcome to my student profile! I'm Christian L. Corpez, a 1st Year BS Agriculture student.
+                Welcome to my student profile! I'm Christian, a 1st Year BS Agriculture student.
             </p>
             <div class="greeting-time" id="greetingTime">
                 <i class="fas fa-clock"></i>
@@ -1338,7 +1338,7 @@
                 const config = await response.json();
 
                 if (config.profile) {
-                    document.getElementById('studentName').textContent = config.profile.name || 'CHRISTIAN L. CORPEZ';
+                    document.getElementById('studentName').textContent = config.profile.name || 'CHRIS';
                     document.getElementById('studentBadge').innerHTML = '<i class="fas fa-graduation-cap"></i> ' + (config.profile.year || '1st Year') + ' ' + (config.profile.course || 'BS Agriculture') + ' Student';
                     document.getElementById('studentBio').textContent = config.profile.bio || 'Passionate agriculture student...';
                     document.getElementById('studentEmail').textContent = config.profile.email || 'mythiannnj@gmail.com';
