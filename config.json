@@ -2,7 +2,7 @@
   "profile": {
     "name": "___",
     "year": "1st",
-    "course": "BSVS (Vulcanizing Shop 🚘)",
+    "course": "BSAGRI",
     "bio": "....",
     "profileImg": "https://iili.io/CCgYLCB.png",
     "collegeLogo": "https://iili.io/CCgmBup.jpg",
@@ -34,25 +34,25 @@
     },
     {
       "id": 2,
-      "imgurl": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600",
-      "caption": "Sustainable Farming Workshop",
+      "imgurl": "https://iili.io/Cxtx0pn.jpg",
+      "caption": "Requesting new orig PSA hahahh",
       "date": "March 22, 2026",
-      "time": "9:00 AM - 1:00 PM"
+      "time": "3:00 PM"
     },
 
 {
       "id": 3,
-      "imgurl": "https://iili.io/CCDtDns.jpg",
-      "caption": "Reading",
-      "date": "March 22, 2026",
-      "time": "9:00 AM - 1:00 PM"
+      "imgurl": "https://i.ibb.co/JWM9jqrC/IMG-20260618-110940.jpg",
+      "caption": "Basta nagpa medical hahahah",
+      "date": "06/18/26",
+      "time": "9:00 AM"
     },
     {
       "id": 4,
-      "imgurl": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600",
-      "caption": "Web Dev Meetup: Node.js + Express",
-      "date": "April 5, 2026",
-      "time": "6:00 PM - 9:00 PM"
+      "imgurl": "https://iili.io/CxtFUu4.jpg",
+      "caption": "Namatron whahahaha",
+      "date": "06/17/26",
+      "time": "10:00 AM"
     }
   ]
 }
