@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Personal Information</title>
+    <link rel="icon" href="https://iili.io/CC6nKHQ.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2073&auto=format') no-repeat center center/cover;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format') no-repeat center center/cover;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+
+        body.dark-mode::before {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+            transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode nav {
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        nav img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            transition: border-color 0.3s ease;
+        }
+
+        body.dark-mode nav img {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        nav h6 {
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        #theme-button {
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, color 0.3s ease;
+        }
+
+        #theme-button:hover {
+            transform: rotate(20deg);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease, background 0.3s ease;
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        body.dark-mode .sidebar {
+            background: rgba(0, 0, 0, 0.92);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-header h2 {
+            color: #4caf50;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75rem;
+        }
+
+        .sidebar-menu {
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background: rgba(76, 175, 80, 0.3);
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: rgba(76, 175, 80, 0.5);
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .menu-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 15px 0;
+        }
+
+        .events-title {
+            color: white;
+            font-size: 1rem;
+            margin: 15px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 5px;
+        }
+
+        .events-title i {
+            color: #4caf50;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-event-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-event-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .sidebar-event-img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-event-caption {
+            color: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-event-date, .sidebar-event-time {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 10px;
+        }
+
+        .loading-events {
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+            padding: 100px 20px 20px;
+            min-height: 100vh;
+        }
+
+        .main-wrapper.shifted {
+            margin-left: 300px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .glass-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .section-title i {
+            color: #4caf50;
+            font-size: 2rem;
+        }
+
+        /* Info Items */
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 16px 24px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .info-item {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .info-item:hover {
+            background: rgba(0, 0, 0, 0.4);
+            transform: translateX(5px);
+        }
+
+        body.dark-mode .info-item:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(76, 175, 80, 0.2);
+            border-radius: 50%;
+            color: #4caf50;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            transition: background 0.3s ease;
+        }
+
+        .info-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            font-weight: 500;
+            min-width: 100px;
+            flex-shrink: 0;
+            transition: color 0.3s ease;
+        }
+
+        .info-value {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 500;
+            flex: 1;
+            transition: color 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
+        }
+
+        .info-value.hidden {
+            filter: blur(10px);
+            opacity: 0.5;
+            user-select: none;
+        }
+
+        .eye-toggle-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .eye-toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark-mode .eye-toggle-btn {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .eye-toggle-btn:hover {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #4caf50;
+            transform: scale(1.05);
+        }
+
+        .eye-toggle-btn i {
+            font-size: 1.1rem;
+        }
+
+        .eye-toggle-btn.visible {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #4caf50;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .status-badge.visible {
+            background: rgba(76, 175, 80, 0.7);
+            color: white;
+        }
+
+        .status-badge.hidden {
+            background: rgba(244, 67, 54, 0.7);
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-top: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .footer i {
+            color: #4caf50;
+            margin: 0 4px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+            transition: background 0.3s ease;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Theme transition animation class */
+        .theme-changing {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper.shifted {
+                margin-left: 0;
+            }
+            .glass-card {
+                padding: 25px;
+            }
+            .section-title {
+                font-size: 1.5rem;
+                justify-content: center;
+            }
+            nav h6 {
+                display: none;
+            }
+            .sidebar {
+                width: 280px;
+                left: -280px;
+            }
+            .info-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+                padding: 15px;
+            }
+            .info-label {
+                min-width: auto;
+            }
+            .eye-toggle-container {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 20px;
+            }
+            .section-title {
+                font-size: 1.3rem;
+            }
+            .info-value {
+                font-size: 0.95rem;
+            }
+            .eye-toggle-btn {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="navbar-left">
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo">
+            <h6>Personal Info</h6>
+        </div>
+        <i class="fas fa-moon" id="theme-button"></i>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <div class="subtitle">Student Profile Navigation</div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="/" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">HOME</span>
+            </a>
+            <a href="/info" class="menu-item active">
+                <i class="fas fa-user"></i>
+                <span class="menu-text">INFO</span>
+            </a>
+            <a href="/timeline" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="menu-text">TIMELINE</span>
+            </a>
+            <a href="/newsfeed" class="menu-item">
+                <i class="fas fa-newspaper"></i>
+                <span class="menu-text">NEWSFEED</span>
+            </a>
+            <a href="/bible" class="menu-item">
+                <i class="fas fa-bible"></i>
+                <span class="menu-text">BIBLE</span>
+            </a>
+        </div>
+        <div class="menu-divider"></div>
+        <div class="events-title">
+            <i class="fas fa-calendar-week"></i>
+            <span>Upcoming Events</span>
+        </div>
+        <div class="events-container" id="sidebarEvents">
+            <div class="loading-events">
+                <i class="fas fa-spinner fa-pulse"></i> Loading events...
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+    <div class="main-wrapper" id="mainWrapper">
+        <div class="container">
+            <div class="glass-card fade-in">
+                <div class="section-title">
+                    <i class="fas fa-id-card"></i>
+                    <h2>Personal Information</h2>
+                </div>
+
+                <div class="eye-toggle-container">
+                    <button class="eye-toggle-btn" id="toggleInfoBtn" onclick="togglePersonalInfo()">
+                        <i class="fas fa-eye-slash" id="eyeIcon"></i>
+                        <span id="toggleInfoText">Show Info</span>
+                        <span class="status-badge hidden" id="statusBadge">Hidden</span>
+                    </button>
+                </div>
+
+                <div id="personalInfoContainer">
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-user"></i></div>
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value hidden" id="infoName">CHRISTIAN CORPEZ</span>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-calendar-day"></i></div>
+                        <span class="info-label">Birthdate</span>
+                        <span class="info-value hidden" id="infoBirthdate">12 / 06 / 2007</span>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-venus-mars"></i></div>
+                        <span class="info-label">Gender</span>
+                        <span class="info-value hidden" id="infoGender">MALE</span>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-map-pin"></i></div>
+                        <span class="info-label">Address</span>
+                        <span class="info-value hidden" id="infoAddress">Poblacion Dist 1 Camansi Burauen, Leyte</span>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                        <span class="info-label">Email</span>
+                        <span class="info-value hidden" id="infoEmail">mythiannnj@gmail.com</span>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <span class="info-label">Course</span>
+                        <span class="info-value hidden" id="infoCourse">BS Agriculture</span>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <span class="info-label">Year Level</span>
+                        <span class="info-value hidden" id="infoYear">1st Year</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <i class="fas fa-copyright"></i> 2026 All Rights Reserved. 
+            <i class="fas fa-user-shield"></i> This page is managed by Web Admin
+        </div>
+    </div>
+
+    <script>
+        let isInfoVisible = false; // Default: hidden
+
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const hamburger = document.getElementById('hamburger');
+            const mainWrapper = document.getElementById('mainWrapper');
+
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            hamburger.classList.toggle('active');
+
+            if (window.innerWidth > 768) {
+                mainWrapper.classList.toggle('shifted');
+            }
+        }
+
+        function closeMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const hamburger = document.getElementById('hamburger');
+            const mainWrapper = document.getElementById('mainWrapper');
+
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            hamburger.classList.remove('active');
+            mainWrapper.classList.remove('shifted');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Toggle Personal Information Visibility
+        function togglePersonalInfo() {
+            isInfoVisible = !isInfoVisible;
+            const infoValues = document.querySelectorAll('.info-value');
+            const toggleBtn = document.getElementById('toggleInfoBtn');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const toggleText = document.getElementById('toggleInfoText');
+            const statusBadge = document.getElementById('statusBadge');
+
+            infoValues.forEach(value => {
+                value.classList.toggle('hidden', !isInfoVisible);
+            });
+
+            if (isInfoVisible) {
+                toggleBtn.classList.add('visible');
+                eyeIcon.className = 'fas fa-eye';
+                toggleText.textContent = 'Hide Info';
+                statusBadge.textContent = 'Visible';
+                statusBadge.className = 'status-badge visible';
+            } else {
+                toggleBtn.classList.remove('visible');
+                eyeIcon.className = 'fas fa-eye-slash';
+                toggleText.textContent = 'Show Info';
+                statusBadge.textContent = 'Hidden';
+                statusBadge.className = 'status-badge hidden';
+            }
+
+            // Save preference
+            localStorage.setItem('infoVisibility', isInfoVisible ? 'visible' : 'hidden');
+        }
+
+        // Load Events for Sidebar
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/events');
+                if (!response.ok) throw new Error('Failed to fetch');
+                const events = await response.json();
+
+                const sidebarContainer = document.getElementById('sidebarEvents');
+
+                if (!events || events.length === 0) {
+                    sidebarContainer.innerHTML = '<div class="loading-events">No upcoming events.</div>';
+                    return;
+                }
+
+                let sidebarHtml = '';
+                for (let i = 0; i < events.length; i++) {
+                    const event = events[i];
+                    sidebarHtml += `
+                        <div class="sidebar-event-item">
+                            <img src="${event.imgurl}" alt="${escapeHtml(event.caption)}" class="sidebar-event-img" onerror="this.src='https://via.placeholder.com/300x100?text=No+Image'">
+                            <div class="sidebar-event-caption">${escapeHtml(event.caption)}</div>
+                            <div class="sidebar-event-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(event.date)}</div>
+                            <div class="sidebar-event-time"><i class="fas fa-clock"></i> ${escapeHtml(event.time)}</div>
+                        </div>
+                    `;
+                }
+                sidebarContainer.innerHTML = sidebarHtml;
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('sidebarEvents').innerHTML = '<div class="loading-events">Error loading events.</div>';
+            }
+        }
+
+        // Handle scroll animations
+        function handleScrollAnimation() {
+            const elements = document.querySelectorAll('.fade-in');
+            for (let i = 0; i < elements.length; i++) {
+                const el = elements[i];
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    el.classList.add('visible');
+                }
+            }
+        }
+
+        // Smooth Theme Toggle Function
+        function toggleTheme() {
+            const themeButton = document.getElementById('theme-button');
+            const isDark = document.body.classList.contains('dark-mode');
+            
+            document.body.classList.add('theme-changing');
+            
+            if (isDark) {
+                document.body.classList.remove('dark-mode');
+                themeButton.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark-mode');
+                themeButton.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+            
+            setTimeout(() => {
+                document.body.classList.remove('theme-changing');
+            }, 400);
+        }
+
+        // Theme toggle with smooth transition
+        const themeButton = document.getElementById('theme-button');
+        const savedTheme = localStorage.getItem('theme');
+
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeButton.className = 'fas fa-sun';
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeButton.className = 'fas fa-moon';
+        }
+
+        themeButton.addEventListener('click', toggleTheme);
+
+        // Apply default hidden state on load
+        window.addEventListener('load', function() {
+            // Make sure info is hidden by default
+            const infoValues = document.querySelectorAll('.info-value');
+            const toggleBtn = document.getElementById('toggleInfoBtn');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const toggleText = document.getElementById('toggleInfoText');
+            const statusBadge = document.getElementById('statusBadge');
+            
+            // Ensure all values have 'hidden' class
+            infoValues.forEach(value => {
+                value.classList.add('hidden');
+            });
+            
+            // Set button state to hidden
+            isInfoVisible = false;
+            toggleBtn.classList.remove('visible');
+            eyeIcon.className = 'fas fa-eye-slash';
+            toggleText.textContent = 'Show Info';
+            statusBadge.textContent = 'Hidden';
+            statusBadge.className = 'status-badge hidden';
+            
+            // Load events and handle animations
+            loadEvents();
+            handleScrollAnimation();
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.getElementById('hamburger');
+
+            if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+                if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
+                    closeMenu();
+                }
+            }
+        });
+
+        window.addEventListener('scroll', handleScrollAnimation);
+    </script>
+</body>
+</html>
