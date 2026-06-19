@@ -1,7 +1,7 @@
 {
   "profile": {
     "name": "___",
-    "year": "1st",
+    "year": "1st Year",
     "course": "BSAGRI",
     "bio": "....",
     "profileImg": "https://iili.io/CCgYLCB.png",
@@ -27,10 +27,10 @@
   "events": [
     {
       "id": 1,
-      "imgurl": "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=600",
-      "caption": "AgriTech Summit 2026",
-      "date": "March 15, 2026",
-      "time": "10:00 AM - 4:00 PM"
+      "imgurl": "https://iili.io/CxtWLfp.jpg",
+      "caption": "Ambot tigda la nag selfie haha",
+      "date": "06/19/26",
+      "time": "9:00 PM"
     },
     {
       "id": 2,
