@@ -363,6 +363,10 @@ app.get('/timeline', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'timeline.html'));
 });
 
+app.get('/info', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'info.html'));
+});
+
 app.get('/newsfeed', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'newsfeed.html'));
 });
