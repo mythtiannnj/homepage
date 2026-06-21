@@ -66,55 +66,6 @@ app.get('/api/bible/random', async (req, res) => {
     }
 });
 
-// ========== SPOTIFY DOWNLOADER API ==========
-app.get('/api/spotify/download', async (req, res) => {
-    const trackUrl = req.query.url;
-    
-    if (!trackUrl) {
-        return res.status(400).json({ 
-            success: false, 
-            error: 'Please provide a Spotify track URL' 
-        });
-    }
-    
-    try {
-        const apiUrl = `https://api.zenithapi.qzz.io/spotify?url=${encodeURIComponent(trackUrl)}`;
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        
-        if (data.success && data.data) {
-            res.json({
-                success: true,
-                track: {
-                    id: data.data.track.id,
-                    name: data.data.track.name,
-                    artists: data.data.track.artists,
-                    albumImage: data.data.track.albumImage,
-                    duration: data.data.track.duration,
-                    explicit: data.data.track.explicit,
-                    spotifyUrl: data.data.track.spotifyUrl
-                },
-                download: {
-                    url: data.data.download.url,
-                    expires: data.data.download.expires,
-                    note: data.data.download.note
-                }
-            });
-        } else {
-            res.status(500).json({ 
-                success: false, 
-                error: 'Failed to fetch track information' 
-            });
-        }
-    } catch (error) {
-        console.error('Spotify API error:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
-        });
-    }
-});
-
 // ========== PHILIPPINES & GLOBAL NEWS API ==========
 
 // Google News RSS Feeds - PHILIPPINES
@@ -395,7 +346,6 @@ app.get('/api/health', (req, res) => {
             config: '/api/config',
             events: '/api/events',
             bible: '/api/bible/random',
-            spotify: '/api/spotify/download?url=SPOTIFY_TRACK_URL',
             philippines: '/api/news/philippines/:category',
             global: '/api/news/global/:category',
             combined: '/api/news/combined',
@@ -425,10 +375,6 @@ app.get('/bible', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'bible.html'));
 });
 
-app.get('/spdl', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'spdl.html'));
-});
-
 // Catch-all route to serve index.html
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -439,8 +385,6 @@ app.listen(PORT, () => {
     console.log(`\n🚀 Server running on http://localhost:${PORT}`);
     console.log(`\n📖 Bible API:`);
     console.log(`   GET /api/bible/random - Random Bible verse`);
-    console.log(`\n🎵 Spotify Downloader API:`);
-    console.log(`   GET /api/spotify/download?url=SPOTIFY_TRACK_URL`);
     console.log(`\n📰 News API Endpoints:`);
     console.log(`\n🇵🇭 Philippines News:`);
     console.log(`   GET /api/news/philippines/agriculture`);
@@ -458,11 +402,9 @@ app.listen(PORT, () => {
     console.log(`   GET /api/health`);
     console.log(`\n📄 Pages:`);
     console.log(`   http://localhost:${PORT}/ - Home Page`);
-    console.log(`   http://localhost:${PORT}/info - Personal Information`);
     console.log(`   http://localhost:${PORT}/timeline - Events Timeline`);
     console.log(`   http://localhost:${PORT}/newsfeed - News Feed`);
-    console.log(`   http://localhost:${PORT}/bible - Bible Verse`);
-    console.log(`   http://localhost:${PORT}/spdl - Spotify Downloader\n`);
+    console.log(`   http://localhost:${PORT}/bible - Bible Verse\n`);
 });
 
 // Handle graceful shutdown
