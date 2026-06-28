@@ -66,6 +66,51 @@ app.get('/api/bible/random', async (req, res) => {
     }
 });
 
+// ========== AI ASSISTANT API ==========
+app.get('/api/ai/chat', async (req, res) => {
+    const prompt = req.query.prompt;
+    const userId = req.query.userId || 'portfolio_user';
+    
+    if (!prompt) {
+        return res.status(400).json({ 
+            success: false, 
+            error: 'Please provide a prompt' 
+        });
+    }
+    
+    try {
+        const apiUrl = `https://ai-api-khcz.onrender.com/api/chat?prompt=${encodeURIComponent(prompt)}&userId=${encodeURIComponent(userId)}`;
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        
+        // Check if the API returned an error
+        if (data.error) {
+            return res.status(500).json({
+                success: false,
+                error: data.error
+            });
+        }
+        
+        res.json({
+            success: true,
+            model: data.model || 'gemini-2.5-flash',
+            prompt: data.prompt || prompt,
+            response: data.response || 'Sorry, I could not generate a response.',
+            author: data.author || 'AI Assistant',
+            conversation: data.conversation || null
+        });
+    } catch (error) {
+        console.error('AI API error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: error.message,
+            fallback: {
+                response: "I'm having trouble connecting to my AI service. Please try again later."
+            }
+        });
+    }
+});
+
 // ========== PHILIPPINES & GLOBAL NEWS API ==========
 
 // Google News RSS Feeds - PHILIPPINES
@@ -346,6 +391,7 @@ app.get('/api/health', (req, res) => {
             config: '/api/config',
             events: '/api/events',
             bible: '/api/bible/random',
+            ai: '/api/ai/chat?prompt=your_question&userId=your_id',
             philippines: '/api/news/philippines/:category',
             global: '/api/news/global/:category',
             combined: '/api/news/combined',
@@ -375,6 +421,10 @@ app.get('/bible', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'bible.html'));
 });
 
+app.get('/ai', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'ai.html'));
+});
+
 // Catch-all route to serve index.html
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -383,6 +433,8 @@ app.get('*', (req, res) => {
 // Start server
 app.listen(PORT, () => {
     console.log(`\n🚀 Server running on http://localhost:${PORT}`);
+    console.log(`\n🤖 AI Assistant API:`);
+    console.log(`   GET /api/ai/chat?prompt=Your%20question&userId=your_id`);
     console.log(`\n📖 Bible API:`);
     console.log(`   GET /api/bible/random - Random Bible verse`);
     console.log(`\n📰 News API Endpoints:`);
@@ -402,9 +454,11 @@ app.listen(PORT, () => {
     console.log(`   GET /api/health`);
     console.log(`\n📄 Pages:`);
     console.log(`   http://localhost:${PORT}/ - Home Page`);
+    console.log(`   http://localhost:${PORT}/info - Personal Information`);
     console.log(`   http://localhost:${PORT}/timeline - Events Timeline`);
     console.log(`   http://localhost:${PORT}/newsfeed - News Feed`);
-    console.log(`   http://localhost:${PORT}/bible - Bible Verse\n`);
+    console.log(`   http://localhost:${PORT}/bible - Bible Verse`);
+    console.log(`   http://localhost:${PORT}/ai - AI Assistant\n`);
 });
 
 // Handle graceful shutdown
