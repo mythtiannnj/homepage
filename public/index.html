@@ -1466,7 +1466,7 @@ k<!DOCTYPE html>
 
                 if (config.profile) {
                     document.getElementById('studentName').textContent = config.profile.name || 'CHRIS';
-                    document.getElementById('studentBadge').innerHTML = '<i class="fas fa-graduation-cap"></i> ' + (config.profile.year || '1st Year') + ' ' + (config.profile.course || 'BS Agriculture') + '';
+                    document.getElementById('studentBadge').innerHTML = '<i class="fas fa-graduation-cap"></i> ' + (config.profile.year || '1st Year') + ' ' + (config.profile.course || '') + '';
                     document.getElementById('studentBio').textContent = config.profile.bio || 'Passionate agriculture student...';
                     document.getElementById('studentEmail').textContent = config.profile.email || 'mythiannnj@gmail.com';
                     document.getElementById('emailLink').href = 'mailto:' + (config.profile.email || 'mythiannnj@gmail.com');
