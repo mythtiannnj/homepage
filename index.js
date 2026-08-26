@@ -363,10 +363,6 @@ app.get('/timeline', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'timeline.html'));
 });
 
-app.get('/note', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'note.html'));
-});
-
 app.get('/info', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'info.html'));
 });
