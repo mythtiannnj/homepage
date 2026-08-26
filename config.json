@@ -25,7 +25,7 @@
     "userAgent": "Mozilla/5.0 (Linux; Android 15; Z2461 Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/149.0.7827.91 Mobile Safari/537.36"
   },
   "events": [
-     {
+    {
       "id": 0,
       "imgurl": "https://iili.io/CLrxzYB.jpg",
       "caption": "EVSU BC",
@@ -46,8 +46,7 @@
       "date": "March 22, 2026",
       "time": "3:00 PM"
     },
-
-{
+    {
       "id": 3,
       "imgurl": "https://iili.io/CrJm5Cv.jpg",
       "caption": "Basta nagpa medical hahahah",
@@ -60,14 +59,55 @@
       "caption": "grad man dawwhahahaha",
       "date": "03/31/26",
       "time": "11:00 AM"
-},
-{
+    },
+    {
       "id": 5,
       "imgurl": "https://iili.io/CrdITgI.jpg",
       "caption": "w/ ma janisss",
       "date": "03/31/26",
       "time": "12:00 AM"
     }
-    
-   ]
+  ],
+  "notes": [
+    {
+      "id": 0,
+      "title": "📘 Chapter 3 Summary",
+      "content": "Finished reading chapter 3. Key takeaway: the hero's journey follows a circular pattern. Need to review the archetypes for the exam next week.",
+      "date": "2026-08-24",
+      "time": "09:30 AM",
+      "tag": "Literature"
+    },
+    {
+      "id": 1,
+      "title": "🧪 Lab Report: Photosynthesis",
+      "content": "Measured oxygen production under different light intensities. Results show a clear correlation. Draft conclusion ready, need to add references.",
+      "date": "2026-08-23",
+      "time": "14:15 PM",
+      "tag": "Biology"
+    },
+    {
+      "id": 2,
+      "title": "📝 Project Milestone #2",
+      "content": "UI wireframes approved. Next steps: implement the dashboard and connect to the API. Deadline: Sept 5.",
+      "date": "2026-08-22",
+      "time": "11:00 AM",
+      "tag": "Development"
+    },
+    {
+      "id": 3,
+      "title": "🌍 Geography Essay Outline",
+      "content": "Draft outline for the climate change essay. Focus on urban heat islands. Need to find more case studies from Southeast Asia.",
+      "date": "2026-08-21",
+      "time": "16:45 PM",
+      "tag": "Geography"
+    },
+    {
+      "id": 4,
+      "title": "🎵 Playlist for Study",
+      "content": "Curated a lofi / classical mix. Works best during deep work sessions. Added some jazz for variety.",
+      "date": "2026-08-20",
+      "time": "20:10 PM",
+      "tag": "Personal"
+    }
+  ]
 }
