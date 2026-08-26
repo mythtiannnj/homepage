@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-    <title>Notes</title>
+    <title>Notes · Timeline Style</title>
     <link rel="icon" href="https://iili.io/CC6nKHQ.png" type="image/png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
@@ -732,26 +732,13 @@
             return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' } [m] || m));
         }
 
-        // ----- CONVERT EVENTS TO NOTES (with date & time) -----
-        function eventsToNotes(events) {
-            return events.map((ev, idx) => ({
-                id: ev.id || idx,
-                title: ev.caption || 'Untitled Note',
-                content: ev.caption || 'No additional content.',
-                date: ev.date || 'Unknown date',
-                time: ev.time || 'Unknown time',
-                tag: 'Event',
-                icon: '📌'
-            }));
-        }
-
         // ----- RENDER NOTES (main + sidebar) -----
         function renderNotes(notes) {
             const container = document.getElementById('notesContainer');
             const sidebarContainer = document.getElementById('sidebarNotes');
 
             if (!notes || notes.length === 0) {
-                container.innerHTML = '<div class="loading">No notes yet.</div>';
+                container.innerHTML = '<div class="loading">No notes yet. Add some in config.json</div>';
                 if (sidebarContainer) sidebarContainer.innerHTML = '<div class="loading-events">No recent notes.</div>';
                 return;
             }
@@ -760,14 +747,18 @@
             let sideHtml = '';
 
             notes.forEach((note) => {
-                const iconEmoji = note.icon || '📌';
+                // Extract emoji from title if present, else use default
+                const iconMatch = note.title.match(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{2700}-\u{27BF}]|[📌📘🧪📝🌍🎵])/u);
+                const iconEmoji = iconMatch ? iconMatch[0] : '📌';
+                // Clean title by removing the emoji prefix if it exists
+                const cleanTitle = note.title.replace(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{2700}-\u{27BF}]|[📌📘🧪📝🌍🎵])\s*/, '');
 
                 mainHtml += `
                     <div class="note-item fade-in">
                         <div class="note-icon">${esc(iconEmoji)}</div>
                         <div class="note-details">
                             <div class="note-title">
-                                ${esc(note.title)}
+                                ${esc(cleanTitle)}
                                 <span class="note-tag">${esc(note.tag || 'General')}</span>
                             </div>
                             <div class="note-content">${esc(note.content)}</div>
@@ -783,7 +774,7 @@
                     <div class="sidebar-event-item">
                         <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
                             <span style="font-size:1.2rem;">${esc(iconEmoji)}</span>
-                            <span class="sidebar-event-caption" style="font-weight:600;">${esc(note.title)}</span>
+                            <span class="sidebar-event-caption" style="font-weight:600;">${esc(cleanTitle)}</span>
                         </div>
                         <div style="color:rgba(255,255,255,0.7);font-size:0.75rem;display:flex;flex-wrap:wrap;gap:4px 12px;">
                             <span><i class="fas fa-calendar-day"></i> ${esc(note.date)}</span>
@@ -810,12 +801,12 @@
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const config = await response.json();
 
-                const events = config.events || [];
-                if (events.length === 0) {
+                // Check if notes array exists in config
+                const notes = config.notes || [];
+                if (notes.length === 0) {
                     renderNotes([]);
                     return;
                 }
-                const notes = eventsToNotes(events);
                 renderNotes(notes);
             } catch (error) {
                 console.error('Error loading config.json:', error);
