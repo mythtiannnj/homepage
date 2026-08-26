@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-    <title>Notes · Timeline Style</title>
-    <link rel="icon" href="https://iili.io/CC6nKHQ.png" type="image/png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Notes | Timeline</title>
+    <link rel="icon" href="https://iili.io/CC6nKHQ.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ----- RESET & BASE ----- */
         * {
             margin: 0;
             padding: 0;
@@ -48,18 +47,17 @@
             transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ----- FADE IN ----- */
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
+
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* ----- NAVBAR (same as timeline) ----- */
         nav {
             position: fixed;
             top: 0;
@@ -96,6 +94,7 @@
             padding: 5px;
             z-index: 1001;
         }
+
         .hamburger div {
             width: 25px;
             height: 3px;
@@ -103,12 +102,15 @@
             border-radius: 3px;
             transition: all 0.3s ease;
         }
+
         .hamburger.active div:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
+
         .hamburger.active div:nth-child(2) {
             opacity: 0;
         }
+
         .hamburger.active div:nth-child(3) {
             transform: rotate(-45deg) translate(7px, -7px);
         }
@@ -121,6 +123,7 @@
             border: 2px solid rgba(255, 255, 255, 0.5);
             transition: border-color 0.3s ease;
         }
+
         body.dark-mode nav img {
             border-color: rgba(255, 255, 255, 0.3);
         }
@@ -130,6 +133,7 @@
             font-size: 1rem;
             font-weight: 500;
             letter-spacing: 1px;
+            transition: color 0.3s ease;
         }
 
         #theme-button {
@@ -138,11 +142,11 @@
             cursor: pointer;
             transition: transform 0.3s, color 0.3s ease;
         }
+
         #theme-button:hover {
             transform: rotate(20deg);
         }
 
-        /* ----- SIDEBAR (same) ----- */
         .sidebar {
             position: fixed;
             top: 0;
@@ -157,9 +161,11 @@
             padding: 20px;
             overflow-y: auto;
         }
+
         body.dark-mode .sidebar {
             background: rgba(0, 0, 0, 0.92);
         }
+
         .sidebar.active {
             left: 0;
         }
@@ -170,11 +176,13 @@
             padding-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .sidebar-header h2 {
             color: #4caf50;
             font-size: 1.5rem;
             margin-bottom: 5px;
         }
+
         .subtitle {
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.75rem;
@@ -183,6 +191,7 @@
         .sidebar-menu {
             margin-bottom: 30px;
         }
+
         .menu-item {
             display: flex;
             align-items: center;
@@ -194,17 +203,21 @@
             transition: all 0.3s;
             margin-bottom: 5px;
         }
+
         .menu-item:hover {
             background: rgba(76, 175, 80, 0.3);
             transform: translateX(5px);
         }
+
         .menu-item.active {
             background: rgba(76, 175, 80, 0.5);
         }
+
         .menu-item i {
             width: 24px;
             font-size: 1.2rem;
         }
+
         .menu-text {
             font-size: 0.95rem;
             font-weight: 500;
@@ -225,8 +238,10 @@
             gap: 8px;
             padding-left: 5px;
         }
+
         .events-title i {
             color: #4caf50;
+            font-size: 0.9rem;
         }
 
         .sidebar-event-item {
@@ -236,10 +251,12 @@
             margin-bottom: 12px;
             transition: all 0.3s;
         }
+
         .sidebar-event-item:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: translateX(5px);
         }
+
         .sidebar-event-img {
             width: 100%;
             height: 100px;
@@ -247,14 +264,15 @@
             border-radius: 10px;
             margin-bottom: 8px;
         }
+
         .sidebar-event-caption {
             color: white;
             font-weight: 500;
             font-size: 0.85rem;
             margin-bottom: 5px;
         }
-        .sidebar-event-date,
-        .sidebar-event-time {
+
+        .sidebar-event-date, .sidebar-event-time {
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.7rem;
             display: inline-flex;
@@ -270,7 +288,6 @@
             font-size: 0.85rem;
         }
 
-        /* ----- MAIN WRAPPER ----- */
         .main-wrapper {
             position: relative;
             z-index: 1;
@@ -279,6 +296,7 @@
             padding: 100px 20px 20px;
             min-height: 100vh;
         }
+
         .main-wrapper.shifted {
             margin-left: 300px;
         }
@@ -288,7 +306,6 @@
             margin: 0 auto;
         }
 
-        /* ----- GLASS CARD ----- */
         .glass-card {
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(15px);
@@ -299,10 +316,12 @@
             margin-bottom: 25px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         body.dark-mode .glass-card {
             background: rgba(0, 0, 0, 0.4);
             border-color: rgba(255, 255, 255, 0.15);
         }
+
         .glass-card:hover {
             transform: translateY(-5px);
         }
@@ -314,16 +333,18 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            transition: color 0.3s ease;
         }
+
         .section-title i {
             color: #4caf50;
         }
 
-        /* ----- NOTES TIMELINE (styled like events) ----- */
         .timeline {
             position: relative;
             padding-left: 30px;
         }
+
         .timeline::before {
             content: '';
             position: absolute;
@@ -334,26 +355,30 @@
             background: rgba(76, 175, 80, 0.6);
         }
 
+        /* Note Item Styles - Similar to event-item */
         .note-item {
             position: relative;
             margin-bottom: 40px;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(5px);
             border-radius: 20px;
-            padding: 20px 25px;
+            padding: 20px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             align-items: flex-start;
         }
+
         body.dark-mode .note-item {
             background: rgba(0, 0, 0, 0.3);
         }
+
         .note-item:hover {
             transform: scale(1.02);
             background: rgba(255, 255, 255, 0.25);
         }
+
         body.dark-mode .note-item:hover {
             background: rgba(0, 0, 0, 0.45);
         }
@@ -371,13 +396,13 @@
             z-index: 2;
         }
 
-        /* Note icon / emoji placeholder (like image) */
+        /* Note Icon */
         .note-icon {
             flex: 0 0 70px;
             width: 70px;
             height: 70px;
             background: rgba(76, 175, 80, 0.25);
-            border-radius: 20px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -387,6 +412,7 @@
             color: white;
             transition: 0.3s;
         }
+
         .note-item:hover .note-icon {
             background: rgba(76, 175, 80, 0.45);
             transform: scale(1.02);
@@ -401,7 +427,7 @@
         .note-title {
             font-size: 1.4rem;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -423,14 +449,13 @@
             margin-top: 6px;
         }
 
-        .note-date,
-        .note-time {
+        .note-date, .note-time {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             background: rgba(0, 0, 0, 0.3);
             padding: 4px 14px;
-            border-radius: 30px;
+            border-radius: 20px;
             font-size: 0.85rem;
             backdrop-filter: blur(4px);
         }
@@ -446,7 +471,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* ----- TOAST (same) ----- */
         .toast-message {
             position: fixed;
             bottom: 30px;
@@ -462,9 +486,11 @@
             transition: transform 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
+
         .toast-message.show {
             transform: translateX(0);
         }
+
         .toast-message.error {
             background: rgba(244, 67, 54, 0.95);
         }
@@ -482,7 +508,9 @@
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.85rem;
             margin-top: 20px;
+            transition: color 0.3s ease;
         }
+
         .footer i {
             color: #4caf50;
             margin: 0 4px;
@@ -497,7 +525,9 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 998;
             display: none;
+            transition: background 0.3s ease;
         }
+
         .overlay.active {
             display: block;
         }
@@ -506,7 +536,6 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ----- RESPONSIVE ----- */
         @media (min-width: 769px) and (max-width: 1200px) {
             .container {
                 max-width: 960px;
@@ -590,31 +619,45 @@
     </style>
 </head>
 <body>
-
-    <!-- NAV -->
     <nav>
         <div class="navbar-left">
             <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-                <div></div><div></div><div></div>
+                <div></div>
+                <div></div>
+                <div></div>
             </div>
-            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo" />
-            <h6>Notes</h6>
+            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo" id="navLogo">
+            <h6 id="navTitle">Notes</h6>
         </div>
         <i class="fas fa-moon" id="theme-button"></i>
     </nav>
 
-    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>Menu</h2>
             <div class="subtitle">Student Profile Navigation</div>
         </div>
         <div class="sidebar-menu">
-            <a href="/" class="menu-item"><i class="fas fa-home"></i><span class="menu-text">HOME</span></a>
-            <a href="/info" class="menu-item"><i class="fas fa-user"></i><span class="menu-text">INFO</span></a>
-            <a href="/timeline" class="menu-item"><i class="fas fa-calendar-alt"></i><span class="menu-text">TIMELINE</span></a>
-            <a href="/notes" class="menu-item active"><i class="fas fa-sticky-note"></i><span class="menu-text">NOTES</span></a>
-            <a href="/bible" class="menu-item"><i class="fas fa-bible"></i><span class="menu-text">BIBLE</span></a>
+            <a href="/" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">HOME</span>
+            </a>
+            <a href="/info" class="menu-item">
+                <i class="fas fa-user"></i>
+                <span class="menu-text">INFO</span>
+            </a>
+            <a href="/timeline" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="menu-text">TIMELINE</span>
+            </a>
+            <a href="/notes" class="menu-item active">
+                <i class="fas fa-sticky-note"></i>
+                <span class="menu-text">NOTES</span>
+            </a>
+            <a href="/bible" class="menu-item">
+                <i class="fas fa-bible"></i>
+                <span class="menu-text">BIBLE</span>
+            </a>
         </div>
         <div class="menu-divider"></div>
         <div class="events-title">
@@ -622,16 +665,17 @@
             <span>Recent Notes</span>
         </div>
         <div class="events-container" id="sidebarNotes">
-            <div class="loading-events"><i class="fas fa-spinner fa-pulse"></i> Loading notes...</div>
+            <div class="loading-events">
+                <i class="fas fa-spinner fa-pulse"></i> Loading notes...
+            </div>
         </div>
     </div>
 
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
-    <!-- MAIN -->
     <div class="main-wrapper" id="mainWrapper">
         <div class="container">
-            <div class="glass-card fade-in">
+            <div class="glass-card fade-in" id="notesCard">
                 <div class="section-title">
                     <i class="fas fa-sticky-note"></i>
                     <h2>Notes Timeline</h2>
@@ -641,27 +685,28 @@
                 </div>
             </div>
         </div>
+
         <div class="footer">
-            <i class="fas fa-copyright"></i> 2026 All Rights Reserved.
+            <i class="fas fa-copyright"></i> 2026 All Rights Reserved. 
             <i class="fas fa-user-shield"></i> This page is managed by Web Admin
         </div>
     </div>
 
-    <!-- TOAST -->
     <div id="toastMessage" class="toast-message">
-        <i class="fas fa-check-circle"></i> Done!
+        <i class="fas fa-check-circle"></i> Note loaded successfully!
     </div>
 
     <script>
-        // ----- SIDEBAR TOGGLE -----
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
             const hamburger = document.getElementById('hamburger');
             const mainWrapper = document.getElementById('mainWrapper');
+
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
             hamburger.classList.toggle('active');
+
             if (window.innerWidth > 768) {
                 mainWrapper.classList.toggle('shifted');
             }
@@ -672,178 +717,190 @@
             const overlay = document.getElementById('overlay');
             const hamburger = document.getElementById('hamburger');
             const mainWrapper = document.getElementById('mainWrapper');
+
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
             hamburger.classList.remove('active');
             mainWrapper.classList.remove('shifted');
         }
 
-        // close on click outside (mobile)
-        document.addEventListener('click', function(e) {
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function showToast(message, isError) {
+            const toast = document.getElementById('toastMessage');
+            toast.innerHTML = (isError ? '<i class="fas fa-exclamation-triangle"></i> ' : '<i class="fas fa-check-circle"></i> ') + message;
+            toast.classList.add('show');
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.remove('error');
+            }
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function handleScrollAnimation() {
+            const elements = document.querySelectorAll('.fade-in');
+            for (let i = 0; i < elements.length; i++) {
+                const el = elements[i];
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    el.classList.add('visible');
+                }
+            }
+        }
+
+        // Extract emoji from title
+        function extractEmoji(title) {
+            const match = title.match(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{2700}-\u{27BF}]|[📌📘🧪📝🌍🎵📚💡🔬🎯💻])/u);
+            return match ? match[0] : '📌';
+        }
+
+        // Clean title by removing emoji prefix
+        function cleanTitle(title) {
+            return title.replace(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{2700}-\u{27BF}]|[📌📘🧪📝🌍🎵📚💡🔬🎯💻])\s*/, '');
+        }
+
+        async function loadNotes() {
+            const container = document.getElementById('notesContainer');
+            const sidebarContainer = document.getElementById('sidebarNotes');
+
+            try {
+                const response = await fetch('config.json');
+                if (!response.ok) throw new Error('Failed to fetch config.json');
+
+                const config = await response.json();
+                const notes = config.notes || [];
+
+                if (!notes || notes.length === 0) {
+                    container.innerHTML = '<div class="loading">No notes found. Add some in config.json</div>';
+                    if (sidebarContainer) sidebarContainer.innerHTML = '<div class="loading-events">No recent notes.</div>';
+                    return;
+                }
+
+                let timelineHtml = '';
+                let sidebarHtml = '';
+
+                for (let i = 0; i < notes.length; i++) {
+                    const note = notes[i];
+                    const emoji = extractEmoji(note.title);
+                    const title = cleanTitle(note.title);
+
+                    timelineHtml += `
+                        <div class="note-item">
+                            <div class="note-icon">${escapeHtml(emoji)}</div>
+                            <div class="note-details">
+                                <div class="note-title">
+                                    ${escapeHtml(title)}
+                                    <span class="note-tag">${escapeHtml(note.tag || 'General')}</span>
+                                </div>
+                                <div class="note-content">${escapeHtml(note.content)}</div>
+                                <div class="note-meta">
+                                    <div class="note-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(note.date)}</div>
+                                    <div class="note-time"><i class="fas fa-clock"></i> ${escapeHtml(note.time)}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    sidebarHtml += `
+                        <div class="sidebar-event-item">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                                <span style="font-size:1.2rem;">${escapeHtml(emoji)}</span>
+                                <span class="sidebar-event-caption" style="font-weight:600;">${escapeHtml(title)}</span>
+                            </div>
+                            <div style="color:rgba(255,255,255,0.7);font-size:0.75rem;display:flex;flex-wrap:wrap;gap:4px 12px;">
+                                <span class="sidebar-event-date"><i class="fas fa-calendar-day"></i> ${escapeHtml(note.date)}</span>
+                                <span class="sidebar-event-time"><i class="fas fa-clock"></i> ${escapeHtml(note.time)}</span>
+                            </div>
+                            <div style="color:rgba(255,255,255,0.5);font-size:0.7rem;margin-top:4px;">${escapeHtml(note.tag || '')}</div>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = timelineHtml;
+                if (sidebarContainer) {
+                    sidebarContainer.innerHTML = sidebarHtml;
+                }
+
+                handleScrollAnimation();
+                showToast('Notes loaded successfully!', false);
+
+            } catch (error) {
+                console.error('Error loading notes:', error);
+                container.innerHTML = `
+                    <div class="loading" style="color:#ff6b6b;">
+                        <i class="fas fa-exclamation-triangle"></i> Error loading notes.<br>
+                        <span style="font-size:0.8rem;">Make sure config.json is in the same folder.</span>
+                    </div>
+                `;
+                if (sidebarContainer) {
+                    sidebarContainer.innerHTML = '<div class="loading-events">Error loading notes.</div>';
+                }
+                showToast('Failed to load config.json', true);
+            }
+        }
+
+        // Smooth Theme Toggle Function
+        function toggleTheme() {
+            const themeButton = document.getElementById('theme-button');
+            const isDark = document.body.classList.contains('dark-mode');
+
+            document.body.classList.add('theme-changing');
+
+            if (isDark) {
+                document.body.classList.remove('dark-mode');
+                themeButton.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark-mode');
+                themeButton.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+
+            setTimeout(() => {
+                document.body.classList.remove('theme-changing');
+            }, 400);
+        }
+
+        // Theme toggle with smooth transition
+        const themeButton = document.getElementById('theme-button');
+        const savedTheme = localStorage.getItem('theme');
+
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeButton.className = 'fas fa-sun';
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeButton.className = 'fas fa-moon';
+        }
+
+        themeButton.addEventListener('click', toggleTheme);
+
+        document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
             const hamburger = document.getElementById('hamburger');
+
             if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
-                if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
                     closeMenu();
                 }
             }
         });
 
-        // ----- THEME TOGGLE (smooth) -----
-        function toggleTheme() {
-            const btn = document.getElementById('theme-button');
-            const isDark = document.body.classList.contains('dark-mode');
-            document.body.classList.add('theme-changing');
-            if (isDark) {
-                document.body.classList.remove('dark-mode');
-                btn.className = 'fas fa-moon';
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.body.classList.add('dark-mode');
-                btn.className = 'fas fa-sun';
-                localStorage.setItem('theme', 'dark');
-            }
-            setTimeout(() => document.body.classList.remove('theme-changing'), 400);
-        }
-
-        const themeBtn = document.getElementById('theme-button');
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-mode');
-            themeBtn.className = 'fas fa-sun';
-        } else {
-            themeBtn.className = 'fas fa-moon';
-        }
-        themeBtn.addEventListener('click', toggleTheme);
-
-        // ----- TOAST -----
-        function showToast(msg, isError = false) {
-            const t = document.getElementById('toastMessage');
-            t.innerHTML = (isError ? '<i class="fas fa-exclamation-triangle"></i> ' : '<i class="fas fa-check-circle"></i> ') + msg;
-            t.classList.add('show');
-            if (isError) t.classList.add('error');
-            else t.classList.remove('error');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
-
-        // ----- ESCAPE HELPER -----
-        function esc(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' } [m] || m));
-        }
-
-        // ----- RENDER NOTES (main + sidebar) -----
-        function renderNotes(notes) {
-            const container = document.getElementById('notesContainer');
-            const sidebarContainer = document.getElementById('sidebarNotes');
-
-            if (!notes || notes.length === 0) {
-                container.innerHTML = '<div class="loading">No notes yet. Add some in config.json</div>';
-                if (sidebarContainer) sidebarContainer.innerHTML = '<div class="loading-events">No recent notes.</div>';
-                return;
-            }
-
-            let mainHtml = '';
-            let sideHtml = '';
-
-            notes.forEach((note) => {
-                // Extract emoji from title if present, else use default
-                const iconMatch = note.title.match(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{2700}-\u{27BF}]|[📌📘🧪📝🌍🎵])/u);
-                const iconEmoji = iconMatch ? iconMatch[0] : '📌';
-                // Clean title by removing the emoji prefix if it exists
-                const cleanTitle = note.title.replace(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{2700}-\u{27BF}]|[📌📘🧪📝🌍🎵])\s*/, '');
-
-                mainHtml += `
-                    <div class="note-item fade-in">
-                        <div class="note-icon">${esc(iconEmoji)}</div>
-                        <div class="note-details">
-                            <div class="note-title">
-                                ${esc(cleanTitle)}
-                                <span class="note-tag">${esc(note.tag || 'General')}</span>
-                            </div>
-                            <div class="note-content">${esc(note.content)}</div>
-                            <div class="note-meta">
-                                <span class="note-date"><i class="fas fa-calendar-day"></i> ${esc(note.date)}</span>
-                                <span class="note-time"><i class="fas fa-clock"></i> ${esc(note.time)}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                sideHtml += `
-                    <div class="sidebar-event-item">
-                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                            <span style="font-size:1.2rem;">${esc(iconEmoji)}</span>
-                            <span class="sidebar-event-caption" style="font-weight:600;">${esc(cleanTitle)}</span>
-                        </div>
-                        <div style="color:rgba(255,255,255,0.7);font-size:0.75rem;display:flex;flex-wrap:wrap;gap:4px 12px;">
-                            <span><i class="fas fa-calendar-day"></i> ${esc(note.date)}</span>
-                            <span><i class="fas fa-clock"></i> ${esc(note.time)}</span>
-                        </div>
-                        <div style="color:rgba(255,255,255,0.5);font-size:0.7rem;margin-top:4px;">${esc(note.tag || '')}</div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = mainHtml;
-            if (sidebarContainer) sidebarContainer.innerHTML = sideHtml;
-
-            // trigger fade-in
-            setTimeout(() => {
-                document.querySelectorAll('.note-item.fade-in').forEach(el => el.classList.add('visible'));
-            }, 80);
-        }
-
-        // ----- LOAD NOTES FROM config.json -----
-        async function loadNotes() {
-            try {
-                const response = await fetch('config.json');
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const config = await response.json();
-
-                // Check if notes array exists in config
-                const notes = config.notes || [];
-                if (notes.length === 0) {
-                    renderNotes([]);
-                    return;
-                }
-                renderNotes(notes);
-            } catch (error) {
-                console.error('Error loading config.json:', error);
-                document.getElementById('notesContainer').innerHTML = `
-                    <div class="loading" style="color:#ff6b6b;">
-                        <i class="fas fa-exclamation-triangle"></i> Failed to load notes.<br>
-                        <span style="font-size:0.8rem;">Make sure config.json is in the same folder.</span>
-                    </div>
-                `;
-                showToast('Failed to load config.json', true);
-            }
-        }
-
-        // ----- SCROLL ANIMATION (for notes) -----
-        function handleScrollAnimation() {
-            document.querySelectorAll('.note-item.fade-in:not(.visible)').forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 80) {
-                    el.classList.add('visible');
-                }
-            });
-        }
-
-        // ----- INIT -----
+        window.addEventListener('scroll', handleScrollAnimation);
         window.addEventListener('load', () => {
             loadNotes();
             handleScrollAnimation();
-        });
-
-        window.addEventListener('scroll', handleScrollAnimation);
-
-        // close sidebar on resize
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar.classList.contains('active')) closeMenu();
-            }
         });
     </script>
 </body>
