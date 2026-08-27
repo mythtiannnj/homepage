@@ -86,6 +86,18 @@
       "text": "Group study for finals",
       "date": "08/22/27",
       "time": "10:00"
+    },
+    {
+      "id": 4,
+      "text": "Submitted project proposal",
+      "date": "08/22/27",
+      "time": "1:45"
+    },
+    {
+      "id": 5,
+      "text": "Meeting with adviser",
+      "date": "08/21/27",
+      "time": "9:15"
     }
   ]
 }
