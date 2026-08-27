@@ -1,103 +1,639 @@
-{
-  "profile": {
-    "name": "Chris",
-    "year": "1st Year",
-    "course": "",
-    "bio": "hello?",
-    "profileImg": "https://iili.io/CCgYLCB.png",
-    "collegeLogo": "https://iili.io/CCgmBup.jpg",
-    "collegeName": "Eastern Visayas State University - Burauen Campus",
-    "collegeAddress": "Burauen, Leyte, Philippines",
-    "schoolLogo": "https://iili.io/CCPoExI.jpg",
-    "schoolName": "Burauen Comprehensive National High School",
-    "schoolAddress": "Burauen, Leyte, Philippines",
-    "email": "mythiannnj@gmail.com",
-    "facebook": "https://facebook.com/61593412679475",
-    "instagram": "https://www.instagram.com/_mythtiannnj",
-    "tiktok": "https://tiktok.com"
-  },
-  "systemInfo": {
-    "ipAddress": "180.190.52.35",
-    "systemTime": "15:16:27",
-    "devicePower": "100",
-    "powerStatus": "N/A",
-    "engineStructure": "15 Active Maps",
-    "userAgent": "Mozilla/5.0 (Linux; Android 15; Z2461 Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/149.0.7827.91 Mobile Safari/537.36"
-  },
-  "events": [
-    {
-      "id": 0,
-      "imgurl": "https://iili.io/CLrxzYB.jpg",
-      "caption": "EVSU BC",
-      "date": "08/19/26",
-      "time": "2:00 PM"
-    },
-    {
-      "id": 1,
-      "imgurl": "https://iili.io/CLgYOqF.jpg",
-      "caption": "EVSUnista ndaw kuno hahaha",
-      "date": "08/18/26",
-      "time": "4:00 PM"
-    },
-    {
-      "id": 2,
-      "imgurl": "https://iili.io/Cxtx0pn.jpg",
-      "caption": "Requesting new orig PSA hahahh",
-      "date": "March 22, 2026",
-      "time": "3:00 PM"
-    },
-    {
-      "id": 3,
-      "imgurl": "https://iili.io/CrJm5Cv.jpg",
-      "caption": "Basta nagpa medical hahahah",
-      "date": "06/18/26",
-      "time": "9:00 AM"
-    },
-    {
-      "id": 4,
-      "imgurl": "https://iili.io/CcZgViN.jpg",
-      "caption": "grad man dawwhahahaha",
-      "date": "03/31/26",
-      "time": "11:00 AM"
-    },
-    {
-      "id": 5,
-      "imgurl": "https://iili.io/CrdITgI.jpg",
-      "caption": "w/ ma janisss",
-      "date": "03/31/26",
-      "time": "12:00 AM"
-    }
-  ],
-  "notes": [
-    {
-      "id": 1,
-      "text": "it's my day",
-      "date": "08/23/27",
-      "time": "12:00"
-    },
-    {
-      "id": 2,
-      "text": "Finished math homework",
-      "date": "08/23/27",
-      "time": "3:30"
-    },
-    {
-      "id": 3,
-      "text": "Group study for finals",
-      "date": "08/22/27",
-      "time": "10:00"
-    },
-    {
-      "id": 4,
-      "text": "Submitted project proposal",
-      "date": "08/22/27",
-      "time": "1:45"
-    },
-    {
-      "id": 5,
-      "text": "Meeting with adviser",
-      "date": "08/21/27",
-      "time": "9:15"
-    }
-  ]
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Note | Daily Notes</title>
+    <link rel="icon" href="https://iili.io/CC6nKHQ.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1493723843671-1d655e66ac1c?q=80&w=2070&auto=format') no-repeat center center/cover;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            background: url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=2070&auto=format') no-repeat center center/cover;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+
+        body.dark-mode::before {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 0;
+            transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode nav {
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        nav img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            transition: border-color 0.3s ease;
+        }
+
+        body.dark-mode nav img {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        nav h6 {
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        #theme-button {
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, color 0.3s ease;
+        }
+
+        #theme-button:hover {
+            transform: rotate(20deg);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease, background 0.3s ease;
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        body.dark-mode .sidebar {
+            background: rgba(0, 0, 0, 0.92);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-header h2 {
+            color: #4caf50;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75rem;
+        }
+
+        .sidebar-menu {
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background: rgba(76, 175, 80, 0.3);
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: rgba(76, 175, 80, 0.5);
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .menu-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+            padding: 100px 20px 20px;
+            min-height: 100vh;
+        }
+
+        .main-wrapper.shifted {
+            margin-left: 300px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .glass-card {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .section-title i {
+            color: #4caf50;
+        }
+
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .note-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border-radius: 15px;
+            padding: 15px 20px;
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        body.dark-mode .note-item {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .note-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        body.dark-mode .note-item:hover {
+            background: rgba(0, 0, 0, 0.55);
+        }
+
+        .note-icon {
+            flex: 0 0 40px;
+            width: 40px;
+            height: 40px;
+            background: rgba(76, 175, 80, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4caf50;
+            font-size: 1.2rem;
+        }
+
+        .note-content {
+            flex: 1;
+        }
+
+        .note-text {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .note-date {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .loading {
+            color: white;
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 40px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-top: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .footer i {
+            color: #4caf50;
+            margin: 0 4px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+            transition: background 0.3s ease;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .theme-changing {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper.shifted {
+                margin-left: 0;
+            }
+            .section-title {
+                font-size: 1.5rem;
+                justify-content: center;
+            }
+            nav h6 {
+                display: none;
+            }
+            .sidebar {
+                width: 280px;
+                left: -280px;
+            }
+            .note-item {
+                padding: 12px 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .glass-card {
+                padding: 20px;
+            }
+            .section-title {
+                font-size: 1.3rem;
+            }
+            .note-text {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="navbar-left">
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <img src="https://iili.io/CC6nKHQ.jpg" alt="logo" id="navLogo">
+            <h6 id="navTitle">Daily Notes</h6>
+        </div>
+        <i class="fas fa-moon" id="theme-button"></i>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Menu</h2>
+            <div class="subtitle">Student Profile Navigation</div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="/" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">HOME</span>
+            </a>
+            <a href="/info" class="menu-item">
+                <i class="fas fa-user"></i>
+                <span class="menu-text">INFO</span>
+            </a>
+            <a href="/timeline" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="menu-text">TIMELINE</span>
+            </a>
+            <a href="/newsfeed" class="menu-item">
+                <i class="fas fa-newspaper"></i>
+                <span class="menu-text">NEWSFEED</span>
+            </a>
+            <a href="/note" class="menu-item active">
+                <i class="fas fa-sticky-note"></i>
+                <span class="menu-text">NOTE</span>
+            </a>
+            <a href="/bible" class="menu-item">
+                <i class="fas fa-bible"></i>
+                <span class="menu-text">BIBLE</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+    <div class="main-wrapper" id="mainWrapper">
+        <div class="container">
+            <div class="glass-card fade-in" id="notesCard">
+                <div class="section-title">
+                    <i class="fas fa-sticky-note"></i>
+                    <h2>Daily Notes</h2>
+                </div>
+                <div id="notesContainer" class="notes-list">
+                    <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading notes...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <i class="fas fa-copyright"></i> 2026 All Rights Reserved. 
+            <i class="fas fa-user-shield"></i> This page is managed by Web Admin
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const hamburger = document.getElementById('hamburger');
+            const mainWrapper = document.getElementById('mainWrapper');
+
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            hamburger.classList.toggle('active');
+
+            if (window.innerWidth > 768) {
+                mainWrapper.classList.toggle('shifted');
+            }
+        }
+
+        function closeMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const hamburger = document.getElementById('hamburger');
+            const mainWrapper = document.getElementById('mainWrapper');
+
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            hamburger.classList.remove('active');
+            mainWrapper.classList.remove('shifted');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function handleScrollAnimation() {
+            const elements = document.querySelectorAll('.fade-in');
+            for (let i = 0; i < elements.length; i++) {
+                const el = elements[i];
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    el.classList.add('visible');
+                }
+            }
+        }
+
+        async function loadNotes() {
+            const container = document.getElementById('notesContainer');
+            
+            try {
+                const response = await fetch('config.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load config.json');
+                }
+                
+                const config = await response.json();
+                const notes = config.notes;
+
+                if (!notes || notes.length === 0) {
+                    container.innerHTML = '<div class="loading">No notes available.</div>';
+                    return;
+                }
+
+                let notesHtml = '';
+
+                for (let i = 0; i < notes.length; i++) {
+                    const note = notes[i];
+                    const safeText = escapeHtml(note.text || note.content || '');
+                    const noteDate = escapeHtml(note.date || '');
+                    const noteTime = escapeHtml(note.time || '');
+
+                    notesHtml += `
+                        <div class="note-item fade-in">
+                            <div class="note-icon">
+                                <i class="fas fa-sticky-note"></i>
+                            </div>
+                            <div class="note-content">
+                                <div class="note-text">${safeText}</div>
+                                <div class="note-date">
+                                    <i class="fas fa-clock"></i> ${noteTime} 
+                                    <i class="fas fa-calendar-day" style="margin-left: 10px;"></i> ${noteDate}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = notesHtml;
+                handleScrollAnimation();
+            } catch (error) {
+                console.error('Error loading notes:', error);
+                container.innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i><br>
+                        Failed to load notes. Please check config.json
+                    </div>
+                `;
+            }
+        }
+
+        function toggleTheme() {
+            const themeButton = document.getElementById('theme-button');
+            const isDark = document.body.classList.contains('dark-mode');
+
+            document.body.classList.add('theme-changing');
+
+            if (isDark) {
+                document.body.classList.remove('dark-mode');
+                themeButton.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark-mode');
+                themeButton.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+
+            setTimeout(() => {
+                document.body.classList.remove('theme-changing');
+            }, 400);
+        }
+
+        const themeButton = document.getElementById('theme-button');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeButton.className = 'fas fa-sun';
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeButton.className = 'fas fa-moon';
+        }
+        themeButton.addEventListener('click', toggleTheme);
+
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.getElementById('hamburger');
+            if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+                if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
+                    closeMenu();
+                }
+            }
+        });
+
+        window.addEventListener('scroll', handleScrollAnimation);
+        window.addEventListener('load', () => {
+            loadNotes();
+            handleScrollAnimation();
+        });
+    </script>
+</body>
+</html>
