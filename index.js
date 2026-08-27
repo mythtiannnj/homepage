@@ -371,6 +371,10 @@ app.get('/newsfeed', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'newsfeed.html'));
 });
 
+
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'notes.html'));
+});
 app.get('/bible', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'bible.html'));
 });
