@@ -70,84 +70,22 @@
   ],
   "notes": [
     {
-      "id": 0,
-      "title": "📘 Chapter 3 Summary",
-      "content": "Finished reading chapter 3. Key takeaway: the hero's journey follows a circular pattern. Need to review the archetypes for the exam next week.",
-      "date": "2026-08-24",
-      "time": "09:30 AM",
-      "tag": "Literature"
-    },
-    {
       "id": 1,
-      "title": "🧪 Lab Report: Photosynthesis",
-      "content": "Measured oxygen production under different light intensities. Results show a clear correlation. Draft conclusion ready, need to add references.",
-      "date": "2026-08-23",
-      "time": "14:15 PM",
-      "tag": "Biology"
+      "text": "it's my day",
+      "date": "08/23/27",
+      "time": "12:00"
     },
     {
       "id": 2,
-      "title": "📝 Project Milestone #2",
-      "content": "UI wireframes approved. Next steps: implement the dashboard and connect to the API. Deadline: Sept 5.",
-      "date": "2026-08-22",
-      "time": "11:00 AM",
-      "tag": "Development"
+      "text": "Finished math homework",
+      "date": "08/23/27",
+      "time": "3:30"
     },
     {
       "id": 3,
-      "title": "🌍 Geography Essay Outline",
-      "content": "Draft outline for the climate change essay. Focus on urban heat islands. Need to find more case studies from Southeast Asia.",
-      "date": "2026-08-21",
-      "time": "16:45 PM",
-      "tag": "Geography"
-    },
-    {
-      "id": 4,
-      "title": "🎵 Playlist for Study",
-      "content": "Curated a lofi / classical mix. Works best during deep work sessions. Added some jazz for variety.",
-      "date": "2026-08-20",
-      "time": "20:10 PM",
-      "tag": "Personal"
-    },
-    {
-      "id": 5,
-      "title": "📚 Research Paper Draft",
-      "content": "Working on the introduction section. Need to cite at least 10 sources for the literature review. Focus on recent studies from 2024-2026.",
-      "date": "2026-08-19",
-      "time": "10:00 AM",
-      "tag": "Research"
-    },
-    {
-      "id": 6,
-      "title": "💡 Python Project Ideas",
-      "content": "Brainstorming final project ideas: 1) Weather app with API, 2) Task manager with GUI, 3) Data visualizer for CSV files. Need to decide by Friday.",
-      "date": "2026-08-18",
-      "time": "3:30 PM",
-      "tag": "Programming"
-    },
-    {
-      "id": 7,
-      "title": "🔬 Chemistry Lab Notes",
-      "content": "Titration experiment results: Average volume used was 24.5 mL. The endpoint color change was clear. Need to calculate the concentration of the unknown solution.",
-      "date": "2026-08-17",
-      "time": "08:45 AM",
-      "tag": "Science"
-    },
-    {
-      "id": 8,
-      "title": "🎯 Project Plan: Study App",
-      "content": "Defined user stories and wireframes. Features: flashcards, pomodoro timer, progress tracking. MVP should be ready in 2 weeks.",
-      "date": "2026-08-16",
-      "time": "1:20 PM",
-      "tag": "Development"
-    },
-    {
-      "id": 9,
-      "title": "📓 Reflection Journal",
-      "content": "Today I learned about the importance of time management. The Pomodoro technique helped me stay focused for 4 hours straight. Will continue using this method.",
-      "date": "2026-08-15",
-      "time": "7:00 PM",
-      "tag": "Personal"
+      "text": "Group study for finals",
+      "date": "08/22/27",
+      "time": "10:00"
     }
   ]
 }
