@@ -1,9 +1,9 @@
 {
   "profile": {
     "name": "Chris",
-    "year": "1st Year",
+    "year": "1st BSAAE",
     "course": "",
-    "bio": "Also I'm Fingerstyle Guitarist",
+    "bio": "💤 > ☕ > 📚 > 🏃 ",
     "profileImg": "https://iili.io/CCgYLCB.png",
     "collegeLogo": "https://iili.io/CCgmBup.jpg",
     "collegeName": "Eastern Visayas State University - Burauen Campus",
@@ -66,38 +66,6 @@
       "caption": "w/ ma janisss (besprendd)",
       "date": "03/31/26",
       "time": "12:00 AM"
-    }
-  ],
-  "notes": [
-    {
-      "id": 1,
-      "text": "it's my day",
-      "date": "08/23/27",
-      "time": "12:00"
-    },
-    {
-      "id": 2,
-      "text": "Finished math homework",
-      "date": "08/23/27",
-      "time": "3:30"
-    },
-    {
-      "id": 3,
-      "text": "Group study for finals",
-      "date": "08/22/27",
-      "time": "10:00"
-    },
-    {
-      "id": 4,
-      "text": "Submitted project proposal",
-      "date": "08/22/27",
-      "time": "1:45"
-    },
-    {
-      "id": 5,
-      "text": "Meeting with adviser",
-      "date": "08/21/27",
-      "time": "9:15"
     }
   ]
 }
